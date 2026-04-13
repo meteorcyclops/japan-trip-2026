@@ -13,7 +13,6 @@
         --muted: #6b7280;
         --line: rgba(31, 41, 51, 0.09);
         --card: rgba(255, 255, 255, 0.74);
-        --card-strong: rgba(255,255,255,0.86);
         --strong: #255c7a;
         --accent: #ce775c;
         --accent-soft: rgba(206, 119, 92, 0.12);
@@ -25,7 +24,7 @@
         --radius-xl: 30px;
         --radius-lg: 24px;
         --radius-md: 18px;
-        --max: 1240px;
+        --max: 1280px;
       }
 
       * { box-sizing: border-box; }
@@ -82,7 +81,8 @@
 
       .nav-links a,
       .mode-btn,
-      .jump-btn {
+      .jump-btn,
+      .link-chip {
         padding: 9px 12px;
         border-radius: 999px;
         color: var(--muted);
@@ -107,7 +107,8 @@
       .info-card,
       .stay-card,
       .jump-panel,
-      .summary-strip {
+      .summary-strip,
+      .resource-card {
         background: var(--card);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
@@ -117,7 +118,7 @@
 
       .hero-card {
         border-radius: var(--radius-xl);
-        padding: 24px 20px;
+        padding: 26px 22px;
         overflow: hidden;
         position: relative;
         background:
@@ -130,8 +131,8 @@
         content: "";
         position: absolute;
         inset: auto -20% -30% auto;
-        width: 240px;
-        height: 240px;
+        width: 260px;
+        height: 260px;
         border-radius: 999px;
         background: radial-gradient(circle, rgba(37,92,122,0.18), transparent 70%);
         pointer-events: none;
@@ -147,7 +148,7 @@
 
       h1 {
         margin: 10px 0 10px;
-        font-size: clamp(34px, 6vw, 68px);
+        font-size: clamp(34px, 6vw, 72px);
         line-height: 0.98;
         letter-spacing: -0.04em;
       }
@@ -211,7 +212,8 @@
         margin-top: 12px;
       }
 
-      .jump-btn {
+      .jump-btn,
+      .link-chip {
         background: rgba(37, 92, 122, 0.08);
         color: var(--strong);
         font-weight: 700;
@@ -246,7 +248,8 @@
       .day-list,
       .stay-grid,
       .highlight-grid,
-      .info-grid {
+      .info-grid,
+      .resource-grid {
         display: grid;
         gap: 14px;
       }
@@ -420,7 +423,8 @@
       .day-card ul,
       .sidebar-card ul,
       .info-card ul,
-      .stay-card ul {
+      .stay-card ul,
+      .resource-card ul {
         margin: 14px 0 0;
         padding-left: 18px;
         line-height: 1.78;
@@ -428,7 +432,8 @@
 
       .sidebar-card,
       .info-card,
-      .stay-card {
+      .stay-card,
+      .resource-card {
         border-radius: 24px;
         padding: 18px;
       }
@@ -436,7 +441,8 @@
       .sidebar-card h3,
       .highlight h3,
       .info-card h3,
-      .stay-card h3 {
+      .stay-card h3,
+      .resource-card h3 {
         margin: 0 0 12px;
         font-size: 18px;
       }
@@ -447,7 +453,9 @@
       .info-card p,
       .info-card li,
       .stay-card p,
-      .stay-card li {
+      .stay-card li,
+      .resource-card p,
+      .resource-card li {
         color: var(--muted);
         line-height: 1.8;
         font-size: 14px;
@@ -457,7 +465,8 @@
 
       .highlight-grid,
       .info-grid,
-      .stay-grid {
+      .stay-grid,
+      .resource-grid {
         grid-template-columns: 1fr;
       }
 
@@ -477,6 +486,20 @@
         justify-content: center;
         font-size: 20px;
         margin-bottom: 12px;
+      }
+
+      .resource-card .head {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 10px;
+      }
+
+      .resource-card .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
       }
 
       .footer {
@@ -506,13 +529,14 @@
         .hero-meta { grid-template-columns: repeat(4, minmax(0,1fr)); }
         .highlight-grid,
         .info-grid,
-        .stay-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+        .stay-grid,
+        .resource-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
         .summary-strip { grid-template-columns: repeat(4, minmax(0,1fr)); }
       }
 
-      @media (min-width: 1000px) {
+      @media (min-width: 1080px) {
         .content-grid {
-          grid-template-columns: minmax(0, 1.65fr) minmax(340px, 0.8fr);
+          grid-template-columns: minmax(0, 1.7fr) minmax(360px, 0.78fr);
           align-items: start;
         }
         .sidebar {
@@ -530,7 +554,7 @@
           <a href="#overview">總覽</a>
           <a href="#stays">住宿節奏</a>
           <a href="#days">每日行程</a>
-          <a href="#guide">旅行指南</a>
+          <a href="#resources">住宿 / 餐廳 / 地圖</a>
           <button class="mode-btn" id="modeBtn" type="button">清單模式</button>
         </div>
       </nav>
@@ -869,6 +893,53 @@
         </div>
       </section>
 
+      <section class="section" id="resources">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Resources</div>
+            <h2>住宿、餐廳、地圖區塊</h2>
+          </div>
+          <p class="section-sub">先幫你把架子搭好，之後要細化店名與連結會很快。</p>
+        </div>
+        <div class="resource-grid">
+          <article class="resource-card">
+            <div class="head"><h3>住宿建議</h3><span class="tag">住哪裡最順</span></div>
+            <ul>
+              <li><strong>名古屋</strong>：名古屋站或榮，前者交通強，後者夜間散步舒服。</li>
+              <li><strong>高山</strong>：高山站步行圈或溫泉旅館。</li>
+              <li><strong>富山</strong>：富山站周邊最省移動成本。</li>
+              <li><strong>金澤</strong>：金澤站 or 近江町市場周邊。</li>
+              <li><strong>大阪</strong>：梅田優先，最後回 KIX 最順。</li>
+            </ul>
+          </article>
+
+          <article class="resource-card">
+            <div class="head"><h3>餐廳方向</h3><span class="tag orange">先抓方向</span></div>
+            <ul>
+              <li>名古屋：手羽先、味噌炸豬排、鰻魚飯三吃。</li>
+              <li>高山：飛驒牛燒肉、握壽司、酒造試飲。</li>
+              <li>富山：白蝦丼、富山黑拉麵。</li>
+              <li>金澤：近江町海鮮、加賀料理、金澤關東煮。</li>
+              <li>大阪：KITTE、福島區、北新地、堀江咖啡店。</li>
+            </ul>
+          </article>
+
+          <article class="resource-card">
+            <div class="head"><h3>地圖與動線</h3><span class="tag green">之後可加 maps</span></div>
+            <ul>
+              <li>每個城市之後都可以補一組 Google Maps 清單。</li>
+              <li>最適合先做的是：名古屋、大阪兩個城市散步地圖。</li>
+              <li>北陸段則適合做成「交通點 + 景點點」混合地圖。</li>
+            </ul>
+            <div class="links">
+              <span class="link-chip">名古屋地圖（待補）</span>
+              <span class="link-chip">金澤地圖（待補）</span>
+              <span class="link-chip">大阪地圖（待補）</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <section class="section" id="guide-extra">
         <div class="section-head">
           <div>
@@ -906,7 +977,7 @@
       </section>
 
       <footer class="footer">
-        這是目前的 v3 視覺與互動優化版。已補上 <strong>資訊密度重分配、桌機層次、快速跳日、收合細節與清單模式</strong>。下一步如果要再往前走，就很適合開始做內容資料化與前端可編輯性。
+        這是目前的 v4 版，已經把 <strong>桌機層次、住宿建議、餐廳方向與地圖區塊骨架</strong> 補上。下一步如果要繼續往前走，最值得做的就是把這些區塊改成真實名單與 Google Maps 連結，之後再接可編輯化會很順。
       </footer>
     </main>
 
