@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="名古屋、北陸、大阪 10 日旅遊網站，整理航班、住宿節奏、每日行程、票券與交通提醒，桌機與手機都好讀。" />
     <title>名古屋・北陸・大阪 10 日旅遊</title>
     <style>
       :root {
@@ -16,6 +17,7 @@
         --accent: #ce775c;
         --accent-soft: rgba(206, 119, 92, 0.12);
         --blue-soft: rgba(37, 92, 122, 0.12);
+        --green-soft: rgba(78, 129, 96, 0.12);
         --shadow: 0 24px 60px rgba(34, 49, 63, 0.12);
         --radius-xl: 30px;
         --radius-lg: 24px;
@@ -36,6 +38,7 @@
       }
 
       a { color: inherit; text-decoration: none; }
+      strong { font-weight: 800; }
 
       .page {
         max-width: var(--max);
@@ -91,7 +94,9 @@
       .day-card,
       .sidebar-card,
       .highlight,
-      .mini-card {
+      .mini-card,
+      .info-card,
+      .stay-card {
         background: var(--card);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
@@ -135,7 +140,7 @@
       .lead {
         margin: 0;
         color: var(--muted);
-        line-height: 1.8;
+        line-height: 1.85;
         font-size: 15px;
         max-width: 64ch;
       }
@@ -176,8 +181,10 @@
       }
 
       .route-list,
-      .notes-list,
-      .day-list {
+      .day-list,
+      .stay-grid,
+      .highlight-grid,
+      .info-grid {
         display: grid;
         gap: 14px;
       }
@@ -207,7 +214,7 @@
       }
 
       .section {
-        margin-top: 22px;
+        margin-top: 24px;
       }
 
       .section-head {
@@ -306,40 +313,58 @@
         font-weight: 700;
       }
 
-      .day-card ul {
+      .tag.green {
+        background: var(--green-soft);
+        color: #34674a;
+      }
+
+      .tag.orange {
+        background: var(--accent-soft);
+        color: #a55339;
+      }
+
+      .day-card ul,
+      .sidebar-card ul,
+      .info-card ul,
+      .stay-card ul {
         margin: 14px 0 0;
         padding-left: 18px;
         line-height: 1.78;
       }
 
-      .sidebar-card {
+      .sidebar-card,
+      .info-card,
+      .stay-card {
         border-radius: 24px;
         padding: 18px;
       }
 
       .sidebar-card h3,
-      .highlight h3 {
+      .highlight h3,
+      .info-card h3,
+      .stay-card h3 {
         margin: 0 0 12px;
         font-size: 18px;
       }
 
       .sidebar-card p,
       .highlight p,
-      .sidebar-card li {
+      .sidebar-card li,
+      .info-card p,
+      .info-card li,
+      .stay-card p,
+      .stay-card li {
         color: var(--muted);
         line-height: 1.8;
         font-size: 14px;
       }
 
-      .sidebar-card ul {
-        margin: 0;
-        padding-left: 18px;
-      }
+      .sidebar-card ul { margin-top: 0; }
 
-      .highlight-grid {
-        display: grid;
+      .highlight-grid,
+      .info-grid,
+      .stay-grid {
         grid-template-columns: 1fr;
-        gap: 14px;
       }
 
       .highlight {
@@ -377,12 +402,14 @@
         .hero { grid-template-columns: 1.45fr 0.95fr; }
         .hero-card { padding: 32px 30px; }
         .hero-meta { grid-template-columns: repeat(4, minmax(0,1fr)); }
-        .highlight-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+        .highlight-grid,
+        .info-grid,
+        .stay-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
       }
 
       @media (min-width: 1000px) {
         .content-grid {
-          grid-template-columns: minmax(0, 1.6fr) minmax(300px, 0.8fr);
+          grid-template-columns: minmax(0, 1.6fr) minmax(320px, 0.82fr);
           align-items: start;
         }
         .sidebar {
@@ -398,9 +425,9 @@
         <div class="brand">名古屋・北陸・大阪旅遊</div>
         <div class="nav-links">
           <a href="#overview">總覽</a>
+          <a href="#stays">住宿節奏</a>
           <a href="#days">每日行程</a>
-          <a href="#highlights">亮點</a>
-          <a href="#notes">提醒</a>
+          <a href="#guide">旅行指南</a>
         </div>
       </nav>
 
@@ -408,7 +435,7 @@
         <article class="hero-card">
           <div class="eyebrow">Japan Family Trip · May 2026</div>
           <h1>名古屋進，<br />北陸穿越，<br />大阪回台。</h1>
-          <p class="lead">這是一趟為 3 位成人安排的 10 天旅程。前段在名古屋以經典城市散策開場，中段用高山、北陸地區周遊券走高山、富山、金澤，最後收在大阪梅田與中之島的新地標。節奏以「好逛、好吃、好移動」為主，不硬塞。</p>
+          <p class="lead">這是一趟為 3 位成人安排的 10 天旅程。前段在名古屋用城市散策開場，中段以高山、富山、金澤串起北陸段，最後收在大阪梅田與中之島的新地標。整體節奏走舒服、不硬塞，但每天都有明確亮點。</p>
 
           <div class="hero-meta">
             <div class="mini-card"><div class="mini-label">旅遊日期</div><div class="mini-value">2026/05/21 - 05/30</div></div>
@@ -420,30 +447,68 @@
 
         <aside class="hero-side">
           <section class="glass">
-            <div class="section-kicker">Route</div>
-            <h2 style="margin:6px 0 14px;font-size:24px;">住宿節奏</h2>
-            <div class="route-list">
-              <div class="route-stop"><div class="route-badge">1</div><div><strong>名古屋</strong><br /><span style="color:var(--muted);">5/21 - 5/22 · 2 晚</span></div></div>
-              <div class="route-stop"><div class="route-badge">2</div><div><strong>高山</strong><br /><span style="color:var(--muted);">5/23 · 1 晚</span></div></div>
-              <div class="route-stop"><div class="route-badge">3</div><div><strong>富山</strong><br /><span style="color:var(--muted);">5/24 · 1 晚</span></div></div>
-              <div class="route-stop"><div class="route-badge">4</div><div><strong>金澤</strong><br /><span style="color:var(--muted);">5/25 - 5/26 · 2 晚</span></div></div>
-              <div class="route-stop"><div class="route-badge">5</div><div><strong>大阪</strong><br /><span style="color:var(--muted);">5/27 - 5/29 · 3 晚</span></div></div>
-            </div>
+            <div class="section-kicker">Pass</div>
+            <h2 style="margin:6px 0 12px;font-size:24px;">票券重點</h2>
+            <p style="margin:0;color:var(--muted);line-height:1.8;">使用 <strong>高山、北陸地區周遊券</strong> 5 日，日期為 <strong>5/23 - 5/27</strong>。高山 → 富山，以及金澤 → 敦賀 → 大阪這幾段，建議提早劃指定席。</p>
           </section>
 
           <section class="glass">
-            <div class="section-kicker">Pass</div>
-            <h2 style="margin:6px 0 12px;font-size:24px;">票券重點</h2>
-            <p style="margin:0;color:var(--muted);line-height:1.8;">使用 <strong>高山、北陸地區周遊券</strong> 5 日，日期為 <strong>5/23 - 5/27</strong>。高山 → 富山、金澤 → 敦賀 → 大阪這些長途建議提早劃指定席。</p>
+            <div class="section-kicker">Tone</div>
+            <h2 style="margin:6px 0 12px;font-size:24px;">這趟旅行的調性</h2>
+            <div class="tag-row" style="margin-top:0;">
+              <span class="tag">成人旅行</span>
+              <span class="tag green">建築 / 美術館</span>
+              <span class="tag orange">城市散步</span>
+            </div>
+            <p style="margin:12px 0 0;color:var(--muted);line-height:1.8;">排除白川鄉、合掌村、黑部立山與偏親子景點。大阪則刻意避開重複踩點，改看 2024 年後的新設施。</p>
           </section>
         </aside>
       </section>
 
-      <section class="section" id="highlights">
+      <section class="section" id="stays">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Stay plan</div>
+            <h2>住宿節奏與城市分工</h2>
+          </div>
+          <p class="section-sub">一邊移動，一邊保留每座城市最值得停下來的時間。</p>
+        </div>
+        <div class="stay-grid">
+          <article class="stay-card">
+            <h3>名古屋 · 2 晚</h3>
+            <p>適合作為進日本第一站，先用商圈、城郭、神宮與商店街暖開旅程。</p>
+            <ul>
+              <li>推薦住名古屋站或榮</li>
+              <li>第一天不要排太滿</li>
+              <li>適合先買藥妝與補給</li>
+            </ul>
+          </article>
+          <article class="stay-card">
+            <h3>高山 / 富山 · 各 1 晚</h3>
+            <p>這兩晚讓北陸段不只是路過，而是真正有時間感受高山與富山的城市氣質。</p>
+            <ul>
+              <li>高山看老街與飛驒牛</li>
+              <li>富山主打玻璃美術館與環水公園</li>
+              <li>節奏輕，不要塞太多點</li>
+            </ul>
+          </article>
+          <article class="stay-card">
+            <h3>金澤 / 大阪</h3>
+            <p>金澤留 2 晚給老街、美術館與武家屋敷，大阪留 3 晚收尾，讓購物與返程更從容。</p>
+            <ul>
+              <li>金澤：2 晚剛好</li>
+              <li>大阪：梅田住宿最順</li>
+              <li>最後一天回 KIX 最輕鬆</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
         <div class="section-head">
           <div>
             <div class="section-kicker">Highlights</div>
-            <h2>這趟旅行的風格</h2>
+            <h2>這趟旅行的亮點</h2>
           </div>
           <p class="section-sub">避開親子向景點，保留城市感、建築感與美食密度。</p>
         </div>
@@ -451,17 +516,17 @@
           <article class="highlight">
             <div class="icon">🏙️</div>
             <h3>城市節奏舒服</h3>
-            <p>名古屋、大阪都有夠完整的商圈與夜間散步路線，不會每天都在趕車趕景點。</p>
+            <p>名古屋與大阪都有完整商圈與夜間散步路線，不需要每天都在趕交通。</p>
           </article>
           <article class="highlight">
             <div class="icon">🎨</div>
             <h3>北陸偏藝術與美學</h3>
-            <p>富山玻璃美術館、金澤 21 世紀美術館、鈴木大拙館，整體氣質比較安靜，也很適合成人旅行。</p>
+            <p>富山玻璃美術館、金澤 21 世紀美術館與鈴木大拙館，讓中段旅程有更安靜的質感。</p>
           </article>
           <article class="highlight">
             <div class="icon">✨</div>
-            <h3>大阪以新設施為主</h3>
-            <p>這次不重複老大阪觀光，主打 GRAND GREEN OSAKA、KITTE 大阪與中之島新地標。</p>
+            <h3>大阪看新，不重複舊踩點</h3>
+            <p>用 GRAND GREEN OSAKA、KITTE 大阪與中之島，取代過度熟悉的舊路線。</p>
           </article>
         </div>
       </section>
@@ -472,14 +537,14 @@
             <div class="section-kicker">Daily Plan</div>
             <h2>每日行程</h2>
           </div>
-          <p class="section-sub">手機滑動好讀，桌機則會搭配右側資訊欄一起看。</p>
+          <p class="section-sub">手機滑起來舒服，桌機則會搭配右側資訊欄一起看。</p>
         </div>
 
         <div class="content-grid">
           <div class="main-col day-list">
             <article class="day-card">
               <div class="day-top"><div><h3 class="day-title">Day 1｜抵達名古屋，晚上逛榮</h3><div class="day-date">5/21（四）</div></div><div class="day-badge">1</div></div>
-              <div class="tag-row"><span class="tag">名古屋站 / 榮</span><span class="tag">夜景散步</span><span class="tag">手羽先</span></div>
+              <div class="tag-row"><span class="tag">名古屋站 / 榮</span><span class="tag">夜景散步</span><span class="tag orange">手羽先</span></div>
               <ul>
                 <li>抵達 NGO 後搭名鐵 μ-SKY 進市區，入住名古屋站或榮商圈。</li>
                 <li>晚上散步 MIRAI TOWER、Oasis 21，旅程第一晚不要排太滿。</li>
@@ -489,7 +554,7 @@
 
             <article class="day-card">
               <div class="day-top"><div><h3 class="day-title">Day 2｜名古屋城、大須、熱田神宮</h3><div class="day-date">5/22（五）</div></div><div class="day-badge">2</div></div>
-              <div class="tag-row"><span class="tag">名古屋城</span><span class="tag">鰻魚飯</span><span class="tag">大須商店街</span></div>
+              <div class="tag-row"><span class="tag">名古屋城</span><span class="tag orange">鰻魚飯</span><span class="tag">大須商店街</span></div>
               <ul>
                 <li>早上體驗 Morning Service，再走名古屋城與本丸御殿。</li>
                 <li>中午可安排鰻魚飯三吃，下午去熱田神宮、大須觀音與大須商店街。</li>
@@ -499,7 +564,7 @@
 
             <article class="day-card">
               <div class="day-top"><div><h3 class="day-title">Day 3｜啟用周遊券，前往高山</h3><div class="day-date">5/23（六）</div></div><div class="day-badge">3</div></div>
-              <div class="tag-row"><span class="tag">周遊券 Day 1</span><span class="tag">JR Hida</span><span class="tag">飛驒牛</span></div>
+              <div class="tag-row"><span class="tag green">周遊券 Day 1</span><span class="tag">JR Hida</span><span class="tag orange">飛驒牛</span></div>
               <ul>
                 <li>正式進入北陸段，搭 JR 特急 Hida 從名古屋前往高山。</li>
                 <li>下午散步三町通、高山陣屋，順手進酒造試飲。</li>
@@ -509,7 +574,7 @@
 
             <article class="day-card">
               <div class="day-top"><div><h3 class="day-title">Day 4｜宮川朝市，富山藝術半日</h3><div class="day-date">5/24（日）</div></div><div class="day-badge">4</div></div>
-              <div class="tag-row"><span class="tag">周遊券 Day 2</span><span class="tag">富山玻璃美術館</span><span class="tag">環水公園</span></div>
+              <div class="tag-row"><span class="tag green">周遊券 Day 2</span><span class="tag">玻璃美術館</span><span class="tag">環水公園</span></div>
               <ul>
                 <li>高山早上先逛宮川朝市，再搭車前往富山。</li>
                 <li>富山市玻璃美術館本身就是很強的建築景點，適合成人旅行。</li>
@@ -519,7 +584,7 @@
 
             <article class="day-card">
               <div class="day-top"><div><h3 class="day-title">Day 5｜金澤古典美學開場</h3><div class="day-date">5/25（一）</div></div><div class="day-badge">5</div></div>
-              <div class="tag-row"><span class="tag">周遊券 Day 3</span><span class="tag">兼六園</span><span class="tag">東茶屋街</span></div>
+              <div class="tag-row"><span class="tag green">周遊券 Day 3</span><span class="tag">兼六園</span><span class="tag">東茶屋街</span></div>
               <ul>
                 <li>從富山移動到金澤後入住，開始金澤 2 晚停留。</li>
                 <li>白天走兼六園、金澤城公園。</li>
@@ -529,7 +594,7 @@
 
             <article class="day-card">
               <div class="day-top"><div><h3 class="day-title">Day 6｜武家屋敷與現代美術</h3><div class="day-date">5/26（二）</div></div><div class="day-badge">6</div></div>
-              <div class="tag-row"><span class="tag">周遊券 Day 4</span><span class="tag">長町武家屋敷</span><span class="tag">21 世紀美術館</span></div>
+              <div class="tag-row"><span class="tag green">周遊券 Day 4</span><span class="tag">長町武家屋敷</span><span class="tag">21 世紀美術館</span></div>
               <ul>
                 <li>上午走長町武家屋敷跡、野村家，體驗比較靜的金澤。</li>
                 <li>下午排金澤 21 世紀美術館；若想收心靈感，可補鈴木大拙館。</li>
@@ -539,7 +604,7 @@
 
             <article class="day-card">
               <div class="day-top"><div><h3 class="day-title">Day 7｜金澤經敦賀前往大阪</h3><div class="day-date">5/27（三）</div></div><div class="day-badge">7</div></div>
-              <div class="tag-row"><span class="tag">周遊券 Day 5</span><span class="tag">敦賀轉乘</span><span class="tag">入住梅田</span></div>
+              <div class="tag-row"><span class="tag green">周遊券 Day 5</span><span class="tag">敦賀轉乘</span><span class="tag">入住梅田</span></div>
               <ul>
                 <li>上午保留彈性，可補散步或晚一點出發。</li>
                 <li>中午搭北陸新幹線到敦賀，再轉 Thunderbird 前往大阪。</li>
@@ -559,7 +624,7 @@
 
             <article class="day-card">
               <div class="day-top"><div><h3 class="day-title">Day 9｜大阪深度漫遊</h3><div class="day-date">5/29（五）</div></div><div class="day-badge">9</div></div>
-              <div class="tag-row"><span class="tag">堀江 / 南船場</span><span class="tag">或新世界</span><span class="tag">福島晚餐</span></div>
+              <div class="tag-row"><span class="tag">堀江 / 南船場</span><span class="tag">或新世界</span><span class="tag orange">福島晚餐</span></div>
               <ul>
                 <li>可選質感派的堀江、南船場，走設計店、咖啡與服飾路線。</li>
                 <li>如果想回味大阪老味道，也可改走新世界與阿倍野 Harukas。</li>
@@ -578,7 +643,7 @@
             </article>
           </div>
 
-          <aside class="sidebar" id="notes">
+          <aside class="sidebar" id="guide">
             <section class="sidebar-card">
               <h3>旅程設定</h3>
               <ul>
@@ -609,20 +674,55 @@
             </section>
 
             <section class="sidebar-card">
-              <h3>下一版可補</h3>
+              <h3>這趟最值得提早處理的事</h3>
               <ul>
-                <li>每晚住宿區域與飯店候選</li>
-                <li>每日餐廳建議</li>
-                <li>Google Maps 連結按鈕</li>
-                <li>票券 / 行李 / 預約清單</li>
+                <li>北陸段指定席</li>
+                <li>想吃的鰻魚飯 / 飛驒牛 / 金澤海鮮店家</li>
+                <li>大阪最後兩晚的梅田住宿</li>
               </ul>
             </section>
           </aside>
         </div>
       </section>
 
+      <section class="section" id="guide-extra">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Travel guide</div>
+            <h2>出發前的小提醒</h2>
+          </div>
+          <p class="section-sub">把最容易臨時手忙腳亂的地方先收好。</p>
+        </div>
+        <div class="info-grid">
+          <article class="info-card">
+            <h3>票券與交通</h3>
+            <ul>
+              <li>周遊券啟用日建議就是 5/23，剛好涵蓋到 5/27。</li>
+              <li>長途移動盡量預先指定席，會舒服很多。</li>
+              <li>金澤 → 大阪已不是直達雷鳥，別到時才發現要敦賀轉乘。</li>
+            </ul>
+          </article>
+          <article class="info-card">
+            <h3>穿著與天氣</h3>
+            <ul>
+              <li>5 月底約 15°C - 25°C，白天舒服，早晚微涼。</li>
+              <li>建議薄長袖、好走的鞋、可穿脫外套。</li>
+              <li>城市散步比例高，鞋子比造型重要。</li>
+            </ul>
+          </article>
+          <article class="info-card">
+            <h3>旅行節奏</h3>
+            <ul>
+              <li>這份行程是可以享受的，不是拼命清單。</li>
+              <li>名古屋與大阪可把商圈當彈性緩衝區。</li>
+              <li>若臨時想放慢，優先刪掉備選景點，不要犧牲吃飯與休息。</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
       <footer class="footer">
-        這是 workspace 版的可視化行程頁，現在已經同時顧到桌機和手機閱讀。下一步如果你要，我可以直接往正式上線版本做，把住宿、餐廳、地圖、票券資訊補齊，之後再掛到 <strong>travel.koxuan.com</strong>。
+        這是目前的整理版 v2，已經把內容與版面一起拉成更接近正式上線頁。下一版可以再補 <strong>住宿候選、餐廳名單、Google Maps 連結、票券與行李 checklist</strong>，讓它更接近出發前真的會拿來用的旅遊網站。
       </footer>
     </main>
   </body>
