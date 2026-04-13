@@ -118,6 +118,7 @@
 
       .hero-card {
         border-radius: var(--radius-xl);
+        animation: fadeUp .7s ease both;
         padding: 26px 22px;
         overflow: hidden;
         position: relative;
@@ -200,6 +201,7 @@
 
       .jump-panel {
         position: sticky;
+        animation: fadeUp .9s ease both;
         top: 82px;
         z-index: 10;
         background: rgba(255,255,255,0.78);
@@ -328,6 +330,7 @@
 
       .day-card {
         border-radius: 28px;
+        animation: fadeUp .6s ease both;
         padding: 18px;
         transition: transform .2s ease, box-shadow .2s ease;
       }
@@ -502,8 +505,53 @@
         margin-top: 12px;
       }
 
+
+      .hero-card, .glass, .stay-card, .highlight, .resource-card, .info-card, .sidebar-card {
+        transition: transform .28s ease, box-shadow .28s ease, background .28s ease;
+      }
+
+      .glass:hover,
+      .stay-card:hover,
+      .highlight:hover,
+      .resource-card:hover,
+      .info-card:hover,
+      .sidebar-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+      }
+
+      .resource-card {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .resource-card::after {
+        content: "";
+        position: absolute;
+        inset: auto -30px -30px auto;
+        width: 120px;
+        height: 120px;
+        border-radius: 999px;
+        background: radial-gradient(circle, rgba(37,92,122,0.08), transparent 70%);
+        pointer-events: none;
+      }
+
+      @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
       .footer {
         margin-top: 28px;
+        animation: fadeUp 1.05s ease both;
         color: var(--muted);
         font-size: 14px;
         line-height: 1.8;
@@ -555,6 +603,7 @@
           <a href="#stays">住宿節奏</a>
           <a href="#days">每日行程</a>
           <a href="#resources">住宿 / 餐廳 / 地圖</a>
+          <a href="#guide-extra">旅行提醒</a>
           <button class="mode-btn" id="modeBtn" type="button">清單模式</button>
         </div>
       </nav>
