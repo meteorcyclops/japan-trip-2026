@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>名古屋・北陸・大阪 10 日旅遊</title>
+    <style>
+      :root {
+        --bg: #f6f1e8;
+        --bg-2: #fbf8f3;
+        --text: #1f2933;
+        --muted: #6b7280;
+        --line: rgba(31, 41, 51, 0.09);
+        --card: rgba(255, 255, 255, 0.74);
+        --strong: #255c7a;
+        --accent: #ce775c;
+        --accent-soft: rgba(206, 119, 92, 0.12);
+        --blue-soft: rgba(37, 92, 122, 0.12);
+        --shadow: 0 24px 60px rgba(34, 49, 63, 0.12);
+        --radius-xl: 30px;
+        --radius-lg: 24px;
+        --radius-md: 18px;
+        --max: 1180px;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: var(--text);
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(37, 92, 122, 0.15), transparent 26%),
+          radial-gradient(circle at 85% 0%, rgba(206, 119, 92, 0.14), transparent 22%),
+          linear-gradient(180deg, var(--bg-2), var(--bg));
+      }
+
+      a { color: inherit; text-decoration: none; }
+
+      .page {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 20px 14px 72px;
+      }
+
+      .nav {
+        position: sticky;
+        top: 10px;
+        z-index: 20;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 14px;
+        margin-bottom: 16px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.68);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(255,255,255,0.6);
+        box-shadow: 0 10px 30px rgba(22, 33, 43, 0.08);
+      }
+
+      .brand {
+        font-weight: 800;
+        letter-spacing: .02em;
+        font-size: 14px;
+      }
+
+      .nav-links {
+        display: none;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .nav-links a {
+        padding: 9px 12px;
+        border-radius: 999px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .hero {
+        display: grid;
+        gap: 18px;
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card,
+      .glass,
+      .day-card,
+      .sidebar-card,
+      .highlight,
+      .mini-card {
+        background: var(--card);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255,255,255,0.6);
+        box-shadow: var(--shadow);
+      }
+
+      .hero-card {
+        border-radius: var(--radius-xl);
+        padding: 24px 20px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .hero-card::after {
+        content: "";
+        position: absolute;
+        inset: auto -20% -30% auto;
+        width: 240px;
+        height: 240px;
+        border-radius: 999px;
+        background: radial-gradient(circle, rgba(37,92,122,0.18), transparent 70%);
+        pointer-events: none;
+      }
+
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        color: var(--strong);
+      }
+
+      h1 {
+        margin: 10px 0 10px;
+        font-size: clamp(32px, 6vw, 62px);
+        line-height: 1.02;
+        letter-spacing: -0.03em;
+      }
+
+      .lead {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 15px;
+        max-width: 64ch;
+      }
+
+      .hero-meta {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-top: 18px;
+      }
+
+      .mini-card {
+        border-radius: 20px;
+        padding: 14px;
+        background: rgba(255,255,255,0.62);
+      }
+
+      .mini-label {
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+
+      .mini-value {
+        font-weight: 700;
+        line-height: 1.5;
+        font-size: 14px;
+      }
+
+      .hero-side {
+        display: grid;
+        gap: 14px;
+      }
+
+      .glass {
+        border-radius: var(--radius-lg);
+        padding: 18px;
+      }
+
+      .route-list,
+      .notes-list,
+      .day-list {
+        display: grid;
+        gap: 14px;
+      }
+
+      .route-stop {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .route-stop:last-child { border-bottom: 0; padding-bottom: 0; }
+      .route-stop:first-child { padding-top: 0; }
+
+      .route-badge {
+        width: 38px;
+        height: 38px;
+        border-radius: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        color: white;
+        background: linear-gradient(135deg, var(--strong), #77aac4);
+        flex: 0 0 auto;
+      }
+
+      .section {
+        margin-top: 22px;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .section-kicker {
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: .16em;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .section h2 {
+        margin: 6px 0 0;
+        font-size: clamp(24px, 4vw, 34px);
+      }
+
+      .section-sub {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .content-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .main-col {
+        display: grid;
+        gap: 14px;
+      }
+
+      .sidebar {
+        display: grid;
+        gap: 14px;
+        align-content: start;
+      }
+
+      .day-card {
+        border-radius: 28px;
+        padding: 18px;
+      }
+
+      .day-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .day-badge {
+        width: 46px;
+        height: 46px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, var(--accent), #efb194);
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        flex: 0 0 auto;
+      }
+
+      .day-title {
+        margin: 0;
+        font-size: 21px;
+      }
+
+      .day-date {
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .tag {
+        font-size: 12px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: var(--blue-soft);
+        color: var(--strong);
+        font-weight: 700;
+      }
+
+      .day-card ul {
+        margin: 14px 0 0;
+        padding-left: 18px;
+        line-height: 1.78;
+      }
+
+      .sidebar-card {
+        border-radius: 24px;
+        padding: 18px;
+      }
+
+      .sidebar-card h3,
+      .highlight h3 {
+        margin: 0 0 12px;
+        font-size: 18px;
+      }
+
+      .sidebar-card p,
+      .highlight p,
+      .sidebar-card li {
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 14px;
+      }
+
+      .sidebar-card ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .highlight-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .highlight {
+        border-radius: 24px;
+        padding: 18px;
+      }
+
+      .highlight .icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin-bottom: 12px;
+      }
+
+      .footer {
+        margin-top: 28px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.8;
+        padding: 22px;
+        border-radius: 26px;
+        background: rgba(255,255,255,0.62);
+        border: 1px solid var(--line);
+      }
+
+      @media (min-width: 760px) {
+        .page { padding: 28px 20px 84px; }
+        .nav-links { display: flex; }
+        .hero { grid-template-columns: 1.45fr 0.95fr; }
+        .hero-card { padding: 32px 30px; }
+        .hero-meta { grid-template-columns: repeat(4, minmax(0,1fr)); }
+        .highlight-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      }
+
+      @media (min-width: 1000px) {
+        .content-grid {
+          grid-template-columns: minmax(0, 1.6fr) minmax(300px, 0.8fr);
+          align-items: start;
+        }
+        .sidebar {
+          position: sticky;
+          top: 84px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <nav class="nav">
+        <div class="brand">名古屋・北陸・大阪旅遊</div>
+        <div class="nav-links">
+          <a href="#overview">總覽</a>
+          <a href="#days">每日行程</a>
+          <a href="#highlights">亮點</a>
+          <a href="#notes">提醒</a>
+        </div>
+      </nav>
+
+      <section class="hero" id="overview">
+        <article class="hero-card">
+          <div class="eyebrow">Japan Family Trip · May 2026</div>
+          <h1>名古屋進，<br />北陸穿越，<br />大阪回台。</h1>
+          <p class="lead">這是一趟為 3 位成人安排的 10 天旅程。前段在名古屋以經典城市散策開場，中段用高山、北陸地區周遊券走高山、富山、金澤，最後收在大阪梅田與中之島的新地標。節奏以「好逛、好吃、好移動」為主，不硬塞。</p>
+
+          <div class="hero-meta">
+            <div class="mini-card"><div class="mini-label">旅遊日期</div><div class="mini-value">2026/05/21 - 05/30</div></div>
+            <div class="mini-card"><div class="mini-label">成員</div><div class="mini-value">3 位成人</div></div>
+            <div class="mini-card"><div class="mini-label">去程</div><div class="mini-value">CX530<br />TPE 11:35 → NGO 15:35</div></div>
+            <div class="mini-card"><div class="mini-label">回程</div><div class="mini-value">CX565<br />KIX 16:20 → TPE 18:30</div></div>
+          </div>
+        </article>
+
+        <aside class="hero-side">
+          <section class="glass">
+            <div class="section-kicker">Route</div>
+            <h2 style="margin:6px 0 14px;font-size:24px;">住宿節奏</h2>
+            <div class="route-list">
+              <div class="route-stop"><div class="route-badge">1</div><div><strong>名古屋</strong><br /><span style="color:var(--muted);">5/21 - 5/22 · 2 晚</span></div></div>
+              <div class="route-stop"><div class="route-badge">2</div><div><strong>高山</strong><br /><span style="color:var(--muted);">5/23 · 1 晚</span></div></div>
+              <div class="route-stop"><div class="route-badge">3</div><div><strong>富山</strong><br /><span style="color:var(--muted);">5/24 · 1 晚</span></div></div>
+              <div class="route-stop"><div class="route-badge">4</div><div><strong>金澤</strong><br /><span style="color:var(--muted);">5/25 - 5/26 · 2 晚</span></div></div>
+              <div class="route-stop"><div class="route-badge">5</div><div><strong>大阪</strong><br /><span style="color:var(--muted);">5/27 - 5/29 · 3 晚</span></div></div>
+            </div>
+          </section>
+
+          <section class="glass">
+            <div class="section-kicker">Pass</div>
+            <h2 style="margin:6px 0 12px;font-size:24px;">票券重點</h2>
+            <p style="margin:0;color:var(--muted);line-height:1.8;">使用 <strong>高山、北陸地區周遊券</strong> 5 日，日期為 <strong>5/23 - 5/27</strong>。高山 → 富山、金澤 → 敦賀 → 大阪這些長途建議提早劃指定席。</p>
+          </section>
+        </aside>
+      </section>
+
+      <section class="section" id="highlights">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Highlights</div>
+            <h2>這趟旅行的風格</h2>
+          </div>
+          <p class="section-sub">避開親子向景點，保留城市感、建築感與美食密度。</p>
+        </div>
+        <div class="highlight-grid">
+          <article class="highlight">
+            <div class="icon">🏙️</div>
+            <h3>城市節奏舒服</h3>
+            <p>名古屋、大阪都有夠完整的商圈與夜間散步路線，不會每天都在趕車趕景點。</p>
+          </article>
+          <article class="highlight">
+            <div class="icon">🎨</div>
+            <h3>北陸偏藝術與美學</h3>
+            <p>富山玻璃美術館、金澤 21 世紀美術館、鈴木大拙館，整體氣質比較安靜，也很適合成人旅行。</p>
+          </article>
+          <article class="highlight">
+            <div class="icon">✨</div>
+            <h3>大阪以新設施為主</h3>
+            <p>這次不重複老大阪觀光，主打 GRAND GREEN OSAKA、KITTE 大阪與中之島新地標。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="days">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Daily Plan</div>
+            <h2>每日行程</h2>
+          </div>
+          <p class="section-sub">手機滑動好讀，桌機則會搭配右側資訊欄一起看。</p>
+        </div>
+
+        <div class="content-grid">
+          <div class="main-col day-list">
+            <article class="day-card">
+              <div class="day-top"><div><h3 class="day-title">Day 1｜抵達名古屋，晚上逛榮</h3><div class="day-date">5/21（四）</div></div><div class="day-badge">1</div></div>
+              <div class="tag-row"><span class="tag">名古屋站 / 榮</span><span class="tag">夜景散步</span><span class="tag">手羽先</span></div>
+              <ul>
+                <li>抵達 NGO 後搭名鐵 μ-SKY 進市區，入住名古屋站或榮商圈。</li>
+                <li>晚上散步 MIRAI TOWER、Oasis 21，旅程第一晚不要排太滿。</li>
+                <li>晚餐可選手羽先或味噌炸豬排，讓名古屋感先上來。</li>
+              </ul>
+            </article>
+
+            <article class="day-card">
+              <div class="day-top"><div><h3 class="day-title">Day 2｜名古屋城、大須、熱田神宮</h3><div class="day-date">5/22（五）</div></div><div class="day-badge">2</div></div>
+              <div class="tag-row"><span class="tag">名古屋城</span><span class="tag">鰻魚飯</span><span class="tag">大須商店街</span></div>
+              <ul>
+                <li>早上體驗 Morning Service，再走名古屋城與本丸御殿。</li>
+                <li>中午可安排鰻魚飯三吃，下午去熱田神宮、大須觀音與大須商店街。</li>
+                <li>如果想多一點知性行程，德川美術館可作為備選。</li>
+              </ul>
+            </article>
+
+            <article class="day-card">
+              <div class="day-top"><div><h3 class="day-title">Day 3｜啟用周遊券，前往高山</h3><div class="day-date">5/23（六）</div></div><div class="day-badge">3</div></div>
+              <div class="tag-row"><span class="tag">周遊券 Day 1</span><span class="tag">JR Hida</span><span class="tag">飛驒牛</span></div>
+              <ul>
+                <li>正式進入北陸段，搭 JR 特急 Hida 從名古屋前往高山。</li>
+                <li>下午散步三町通、高山陣屋，順手進酒造試飲。</li>
+                <li>高山這晚建議住溫泉旅館或步行方便的市區飯店。</li>
+              </ul>
+            </article>
+
+            <article class="day-card">
+              <div class="day-top"><div><h3 class="day-title">Day 4｜宮川朝市，富山藝術半日</h3><div class="day-date">5/24（日）</div></div><div class="day-badge">4</div></div>
+              <div class="tag-row"><span class="tag">周遊券 Day 2</span><span class="tag">富山玻璃美術館</span><span class="tag">環水公園</span></div>
+              <ul>
+                <li>高山早上先逛宮川朝市，再搭車前往富山。</li>
+                <li>富山市玻璃美術館本身就是很強的建築景點，適合成人旅行。</li>
+                <li>傍晚走環水公園，搭配白蝦丼或富山黑拉麵收尾。</li>
+              </ul>
+            </article>
+
+            <article class="day-card">
+              <div class="day-top"><div><h3 class="day-title">Day 5｜金澤古典美學開場</h3><div class="day-date">5/25（一）</div></div><div class="day-badge">5</div></div>
+              <div class="tag-row"><span class="tag">周遊券 Day 3</span><span class="tag">兼六園</span><span class="tag">東茶屋街</span></div>
+              <ul>
+                <li>從富山移動到金澤後入住，開始金澤 2 晚停留。</li>
+                <li>白天走兼六園、金澤城公園。</li>
+                <li>近江町市場吃海鮮，傍晚轉去東茶屋街看老街氣氛。</li>
+              </ul>
+            </article>
+
+            <article class="day-card">
+              <div class="day-top"><div><h3 class="day-title">Day 6｜武家屋敷與現代美術</h3><div class="day-date">5/26（二）</div></div><div class="day-badge">6</div></div>
+              <div class="tag-row"><span class="tag">周遊券 Day 4</span><span class="tag">長町武家屋敷</span><span class="tag">21 世紀美術館</span></div>
+              <ul>
+                <li>上午走長町武家屋敷跡、野村家，體驗比較靜的金澤。</li>
+                <li>下午排金澤 21 世紀美術館；若想收心靈感，可補鈴木大拙館。</li>
+                <li>晚上留給居酒屋或加賀料理。</li>
+              </ul>
+            </article>
+
+            <article class="day-card">
+              <div class="day-top"><div><h3 class="day-title">Day 7｜金澤經敦賀前往大阪</h3><div class="day-date">5/27（三）</div></div><div class="day-badge">7</div></div>
+              <div class="tag-row"><span class="tag">周遊券 Day 5</span><span class="tag">敦賀轉乘</span><span class="tag">入住梅田</span></div>
+              <ul>
+                <li>上午保留彈性，可補散步或晚一點出發。</li>
+                <li>中午搭北陸新幹線到敦賀，再轉 Thunderbird 前往大阪。</li>
+                <li>建議住宿選在梅田，後兩天移動最輕鬆。</li>
+              </ul>
+            </article>
+
+            <article class="day-card">
+              <div class="day-top"><div><h3 class="day-title">Day 8｜梅田與中之島新地標</h3><div class="day-date">5/28（四）</div></div><div class="day-badge">8</div></div>
+              <div class="tag-row"><span class="tag">GRAND GREEN OSAKA</span><span class="tag">KITTE 大阪</span><span class="tag">中之島</span></div>
+              <ul>
+                <li>上午主攻 GRAND GREEN OSAKA，感受梅北二期的整體氛圍。</li>
+                <li>中午可接 KITTE 大阪，適合選物與吃飯。</li>
+                <li>下午轉往中之島美術館與河岸散步，整天是比較新的大阪面貌。</li>
+              </ul>
+            </article>
+
+            <article class="day-card">
+              <div class="day-top"><div><h3 class="day-title">Day 9｜大阪深度漫遊</h3><div class="day-date">5/29（五）</div></div><div class="day-badge">9</div></div>
+              <div class="tag-row"><span class="tag">堀江 / 南船場</span><span class="tag">或新世界</span><span class="tag">福島晚餐</span></div>
+              <ul>
+                <li>可選質感派的堀江、南船場，走設計店、咖啡與服飾路線。</li>
+                <li>如果想回味大阪老味道，也可改走新世界與阿倍野 Harukas。</li>
+                <li>晚餐推薦北新地或福島區。</li>
+              </ul>
+            </article>
+
+            <article class="day-card">
+              <div class="day-top"><div><h3 class="day-title">Day 10｜梅田補貨，前往 KIX</h3><div class="day-date">5/30（六）</div></div><div class="day-badge">10</div></div>
+              <div class="tag-row"><span class="tag">阪神梅田本店</span><span class="tag">Haruka</span><span class="tag">CX565</span></div>
+              <ul>
+                <li>上午在梅田最後採買，阪神梅田本店 B1 食品館很適合買伴手禮。</li>
+                <li>中午前後搭 Haruka 前往關西機場。</li>
+                <li>16:20 飛回台北，結束 10 天行程。</li>
+              </ul>
+            </article>
+          </div>
+
+          <aside class="sidebar" id="notes">
+            <section class="sidebar-card">
+              <h3>旅程設定</h3>
+              <ul>
+                <li>3 位成人，節奏偏舒服，不走親子景點。</li>
+                <li>排除白川鄉、合掌村、黑部立山。</li>
+                <li>大阪重點不是舊景點，而是 2024 年後的新設施。</li>
+              </ul>
+            </section>
+
+            <section class="sidebar-card">
+              <h3>住宿節奏確認</h3>
+              <ul>
+                <li>名古屋 2 晚</li>
+                <li>高山 1 晚</li>
+                <li>富山 1 晚</li>
+                <li>金澤 2 晚</li>
+                <li>大阪 3 晚</li>
+              </ul>
+            </section>
+
+            <section class="sidebar-card">
+              <h3>交通提醒</h3>
+              <ul>
+                <li>高山 → 富山、敦賀 → 大阪建議先劃指定席。</li>
+                <li>金澤往大阪的標準路線是先到敦賀再轉 Thunderbird。</li>
+                <li>大阪住宿選梅田，回 KIX 會比較順。</li>
+              </ul>
+            </section>
+
+            <section class="sidebar-card">
+              <h3>下一版可補</h3>
+              <ul>
+                <li>每晚住宿區域與飯店候選</li>
+                <li>每日餐廳建議</li>
+                <li>Google Maps 連結按鈕</li>
+                <li>票券 / 行李 / 預約清單</li>
+              </ul>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <footer class="footer">
+        這是 workspace 版的可視化行程頁，現在已經同時顧到桌機和手機閱讀。下一步如果你要，我可以直接往正式上線版本做，把住宿、餐廳、地圖、票券資訊補齊，之後再掛到 <strong>travel.koxuan.com</strong>。
+      </footer>
+    </main>
+  </body>
+</html>
