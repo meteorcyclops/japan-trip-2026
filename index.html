@@ -388,6 +388,7 @@
 
       .details-toggle {
         display: inline-flex;
+        transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
         align-items: center;
         gap: 8px;
         border: 0;
@@ -412,6 +413,7 @@
 
       .tag {
         font-size: 12px;
+        transition: transform .2s ease, background .2s ease;
         padding: 8px 10px;
         border-radius: 999px;
         background: var(--blue-soft);
@@ -551,6 +553,8 @@
 
       .footer {
         margin-top: 28px;
+        position: relative;
+        overflow: hidden;
         animation: fadeUp 1.05s ease both;
         color: var(--muted);
         font-size: 14px;
@@ -559,6 +563,27 @@
         border-radius: 26px;
         background: rgba(255,255,255,0.62);
         border: 1px solid var(--line);
+      }
+
+      .details-toggle:hover, .jump-btn:hover, .link-chip:hover, .mode-btn:hover {
+        transform: translateY(-1px);
+        background: rgba(37, 92, 122, 0.14);
+      }
+
+      .tag:hover {
+        transform: translateY(-1px);
+      }
+
+      .footer::after {
+        content: "";
+        position: absolute;
+        right: -40px;
+        bottom: -40px;
+        width: 140px;
+        height: 140px;
+        border-radius: 999px;
+        background: radial-gradient(circle, rgba(206,119,92,0.12), transparent 70%);
+        pointer-events: none;
       }
 
       body.list-mode .day-card {
@@ -948,7 +973,7 @@
             <div class="section-kicker">Resources</div>
             <h2>住宿、餐廳、地圖區塊</h2>
           </div>
-          <p class="section-sub">先幫你把架子搭好，之後要細化店名與連結會很快。</p>
+          <p class="section-sub">先把最好用的骨架做好，之後補店名、地圖與連結就會非常快。</p>
         </div>
         <div class="resource-grid">
           <article class="resource-card">
