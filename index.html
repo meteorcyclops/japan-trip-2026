@@ -471,8 +471,71 @@
       .highlight-grid,
       .info-grid,
       .stay-grid,
-      .resource-grid {
+      .resource-grid,
+      .planning-grid {
         grid-template-columns: 1fr;
+      }
+
+      .planning-grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .planning-card {
+        border-radius: 24px;
+        padding: 18px;
+        background: var(--card);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255,255,255,0.6);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .planning-card h3 {
+        margin: 0 0 12px;
+        font-size: 18px;
+      }
+
+      .planning-card p,
+      .planning-card li {
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 14px;
+      }
+
+      .planning-card ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .todo-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .todo-item {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .todo-item:last-child { border-bottom: 0; padding-bottom: 0; }
+
+      .todo-dot {
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 800;
+        flex: 0 0 auto;
+        margin-top: 2px;
       }
 
       .highlight {
@@ -603,7 +666,8 @@
         .highlight-grid,
         .info-grid,
         .stay-grid,
-        .resource-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+        .resource-grid,
+        .planning-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
         .summary-strip { grid-template-columns: repeat(4, minmax(0,1fr)); }
       }
 
@@ -1010,6 +1074,42 @@
               <span class="link-chip">金澤地圖（待補）</span>
               <span class="link-chip">大阪地圖（待補）</span>
             </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="planning-dashboard">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Planning dashboard</div>
+            <h2>出發前控制台</h2>
+          </div>
+          <p class="section-sub">把最容易忘、最值得先處理的事情集中收好。</p>
+        </div>
+        <div class="planning-grid">
+          <article class="planning-card">
+            <h3>預約 / 待辦優先順序</h3>
+            <div class="todo-list">
+              <div class="todo-item"><div class="todo-dot">1</div><div>確認高山、北陸地區周遊券購買與啟用方式。</div></div>
+              <div class="todo-item"><div class="todo-dot">2</div><div>優先處理 JR Hida、高山 → 富山、金澤 → 敦賀 → 大阪指定席。</div></div>
+              <div class="todo-item"><div class="todo-dot">3</div><div>確認大阪梅田住宿，讓最後三晚與機場日更從容。</div></div>
+              <div class="todo-item"><div class="todo-dot">4</div><div>每個城市至少補 1 間主餐廳 + 1 間備選。</div></div>
+            </div>
+          </article>
+
+          <article class="planning-card">
+            <h3>行李 / 節奏提醒</h3>
+            <ul>
+              <li>北陸段有多次換城市，行李請以好拖、好提為優先。</li>
+              <li>5 月底白天舒服，但早晚與雨天還是建議帶薄外套。</li>
+              <li>這趟主打舒服，不要在移動日臨時塞太多景點。</li>
+              <li>最後一天採買集中梅田，能減少返程焦慮。</li>
+            </ul>
+          </article>
+
+          <article class="planning-card">
+            <h3>最適合分享給朋友的版本</h3>
+            <p>這趟不是打卡式日本，而是偏城市散步、建築感和吃得舒服的版本。前面用名古屋暖開，中段收高山、富山、金澤，最後用大阪新地標做收尾。</p>
           </article>
         </div>
       </section>
