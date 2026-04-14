@@ -227,6 +227,128 @@
         grid-template-columns: repeat(2, minmax(0,1fr));
       }
 
+      .route-board {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: 1fr;
+      }
+
+      .route-visual {
+        border-radius: 24px;
+        padding: 18px;
+        background: var(--card);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255,255,255,0.6);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .route-flow {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .route-node {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.68);
+        border: 1px solid var(--line);
+      }
+
+      .route-node-badge {
+        width: 38px;
+        height: 38px;
+        border-radius: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        color: white;
+        background: linear-gradient(135deg, var(--strong), #77aac4);
+        flex: 0 0 auto;
+      }
+
+      .route-arrow {
+        text-align: center;
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .ticket-table {
+        display: grid;
+        gap: 12px;
+      }
+
+      .ticket-row {
+        padding: 14px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.68);
+        border: 1px solid var(--line);
+      }
+
+      .ticket-row strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .city-visual-grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: 1fr;
+      }
+
+      .city-visual-card {
+        border-radius: 24px;
+        padding: 18px;
+        background: var(--card);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255,255,255,0.6);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .city-visual-art {
+        height: 148px;
+        border-radius: 20px;
+        margin-bottom: 14px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .city-visual-art::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.10));
+      }
+
+      .city-nagoya { background: linear-gradient(135deg, #dfefff, #f7efe3); }
+      .city-takayama { background: linear-gradient(135deg, #efe1d2, #e7f0e7); }
+      .city-toyama { background: linear-gradient(135deg, #d8eef2, #eff8ff); }
+      .city-kanazawa { background: linear-gradient(135deg, #eee6da, #f8f1e7); }
+      .city-osaka { background: linear-gradient(135deg, #dce7f7, #f5e6df); }
+
+      .city-visual-line {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 20px;
+        height: 46px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.55);
+        border: 1px solid rgba(255,255,255,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        color: rgba(31,41,51,0.72);
+        z-index: 1;
+      }
+
       .summary-item {
         padding: 12px 14px;
         border-radius: 18px;
@@ -734,6 +856,8 @@
         .resource-grid,
         .planning-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
         .summary-strip { grid-template-columns: repeat(4, minmax(0,1fr)); }
+        .route-board { grid-template-columns: 1.05fr 0.95fr; }
+        .city-visual-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
       }
 
       @media (min-width: 1080px) {
@@ -801,6 +925,42 @@
           <div class="summary-item"><div class="k">移動最重要</div><div class="v">5/23 啟用周遊券<br />5/27 敦賀轉乘到大阪</div></div>
           <div class="summary-item"><div class="k">這趟亮點</div><div class="v">高山老街、富山玻璃美術館、金澤 21 世紀美術館、GRAND GREEN OSAKA</div></div>
           <div class="summary-item"><div class="k">旅行氣質</div><div class="v">城市感、建築感、美食密度高，節奏舒服不硬塞</div></div>
+        </div>
+      </section>
+
+      <section class="section" id="route-overview">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Route overview</div>
+            <h2>總路線圖與票券提醒</h2>
+          </div>
+          <p class="section-sub">先用一眼看懂的方式，把整趟移動與票券重點收好。</p>
+        </div>
+        <div class="route-board">
+          <article class="route-visual">
+            <h3 style="margin:0 0 12px;font-size:18px;">總路線圖</h3>
+            <div class="route-flow">
+              <div class="route-node"><div class="route-node-badge">1</div><div><strong>名古屋</strong><br /><span style="color:var(--muted);font-size:14px;">5/21 - 5/22，旅程開場</span></div></div>
+              <div class="route-arrow">↓</div>
+              <div class="route-node"><div class="route-node-badge">2</div><div><strong>高山</strong><br /><span style="color:var(--muted);font-size:14px;">5/23，老街與飛驒牛</span></div></div>
+              <div class="route-arrow">↓</div>
+              <div class="route-node"><div class="route-node-badge">3</div><div><strong>富山</strong><br /><span style="color:var(--muted);font-size:14px;">5/24，玻璃美術館與水岸</span></div></div>
+              <div class="route-arrow">↓</div>
+              <div class="route-node"><div class="route-node-badge">4</div><div><strong>金澤</strong><br /><span style="color:var(--muted);font-size:14px;">5/25 - 5/26，古典景點與美術館</span></div></div>
+              <div class="route-arrow">↓</div>
+              <div class="route-node"><div class="route-node-badge">5</div><div><strong>大阪</strong><br /><span style="color:var(--muted);font-size:14px;">5/27 - 5/30，新地標與返程</span></div></div>
+            </div>
+          </article>
+
+          <article class="route-visual">
+            <h3 style="margin:0 0 12px;font-size:18px;">票券 / 指定席提醒表</h3>
+            <div class="ticket-table">
+              <div class="ticket-row"><strong>5/23（六）周遊券 Day 1</strong>名古屋 → 高山，建議先劃 JR Hida 指定席。</div>
+              <div class="ticket-row"><strong>5/24（日）周遊券 Day 2</strong>高山 → 富山，建議提早確認移動班次。</div>
+              <div class="ticket-row"><strong>5/25（一）- 5/26（二）周遊券 Day 3 / 4</strong>富山、金澤市區以散步與短程移動為主，節奏較輕鬆。</div>
+              <div class="ticket-row"><strong>5/27（三）周遊券 Day 5</strong>金澤 → 敦賀 → 大阪，是這趟最重要的轉乘日，指定席建議優先處理。</div>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -1204,6 +1364,38 @@
           <article class="planning-card">
             <h3>最適合分享給朋友的版本</h3>
             <p>這趟不是打卡式日本，而是偏城市散步、建築感和吃得舒服的版本。前面用名古屋暖開，中段收高山、富山、金澤，最後用大阪新地標做收尾。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="city-visuals">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">City mood</div>
+            <h2>每個城市的旅行感覺</h2>
+          </div>
+          <p class="section-sub">不用先記細節，先記住每座城市的大致氣氛就夠了。</p>
+        </div>
+        <div class="city-visual-grid">
+          <article class="city-visual-card">
+            <div class="city-visual-art city-nagoya"><div class="city-visual-line">名古屋 · 城市開場與商圈節奏</div></div>
+            <h3>名古屋</h3>
+            <p>第一站的任務是把節奏打開，商圈、神宮、城郭和在地美食都很適合暖身。</p>
+          </article>
+          <article class="city-visual-card">
+            <div class="city-visual-art city-takayama"><div class="city-visual-line">高山 · 老街、木造感、飛驒牛</div></div>
+            <h3>高山 / 富山</h3>
+            <p>高山偏老街與木造感，富山則轉成玻璃、現代感與水岸公園，兩城的對比很漂亮。</p>
+          </article>
+          <article class="city-visual-card">
+            <div class="city-visual-art city-kanazawa"><div class="city-visual-line">金澤 · 古典與美術館交錯</div></div>
+            <h3>金澤</h3>
+            <p>兼六園、東茶屋街、武家屋敷與 21 世紀美術館，讓金澤兼具古典與現代氣質。</p>
+          </article>
+          <article class="city-visual-card">
+            <div class="city-visual-art city-osaka"><div class="city-visual-line">大阪 · 新地標、散步、採買收尾</div></div>
+            <h3>大阪</h3>
+            <p>這次不走舊觀光路線，而是把重點放在梅田、中之島與比較新的城市作品感。</p>
           </article>
         </div>
       </section>
