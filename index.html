@@ -650,6 +650,24 @@
         padding-left: 18px;
       }
 
+      .candidate-list {
+        display: grid;
+        gap: 12px;
+        margin-top: 14px;
+      }
+
+      .candidate-item {
+        padding: 14px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.68);
+        border: 1px solid var(--line);
+      }
+
+      .candidate-item strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
       .todo-list {
         display: grid;
         gap: 10px;
@@ -1450,6 +1468,40 @@
         </div>
       </section>
 
+      <section class="section" id="stay-candidates">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Stay candidates</div>
+            <h2>住宿候選清單範例</h2>
+          </div>
+          <p class="section-sub">先用可理解的範例型名單表示，之後如果你決定哪幾間，我可以再幫你換成真實飯店名單。</p>
+        </div>
+        <div class="resource-grid">
+          <article class="resource-card">
+            <div class="head"><h3>名古屋</h3><span class="tag">名古屋站 / 榮</span></div>
+            <div class="candidate-list">
+              <div class="candidate-item"><strong>候選 A：名古屋站步行 5 - 8 分鐘的商務飯店</strong>適合第一天拖行李進出，對長輩也最友善。</div>
+              <div class="candidate-item"><strong>候選 B：榮商圈內的較新飯店</strong>晚上吃飯、散步氣氛會更好，但第一天找路會比名古屋站稍微複雜。</div>
+            </div>
+          </article>
+          <article class="resource-card">
+            <div class="head"><h3>高山 / 富山 / 金澤</h3><span class="tag green">移動便利第一</span></div>
+            <div class="candidate-list">
+              <div class="candidate-item"><strong>高山：</strong>高山站步行圈的溫泉旅館或中型飯店，隔天移動最順。</div>
+              <div class="candidate-item"><strong>富山：</strong>富山站前旅館型飯店即可，不用追求太豪華，重點是省移動。</div>
+              <div class="candidate-item"><strong>金澤：</strong>金澤站旁的便利型飯店，或近江町市場周邊較有旅行感的住宿。</div>
+            </div>
+          </article>
+          <article class="resource-card">
+            <div class="head"><h3>大阪</h3><span class="tag orange">梅田優先</span></div>
+            <div class="candidate-list">
+              <div class="candidate-item"><strong>候選 A：大阪站 / 梅田站步行圈飯店</strong>最適合最後三晚與返程日，採買也最輕鬆。</div>
+              <div class="candidate-item"><strong>候選 B：梅田稍外圍但房間較舒適的飯店</strong>如果預算想換成更寬鬆的房型，可以考慮這型。</div>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <section class="section" id="food-shortlist">
         <div class="section-head">
           <div>
@@ -1482,6 +1534,42 @@
               <li><strong>福島區</strong>：適合 Day 9 晚餐，選擇多又有氣氛。</li>
               <li><strong>北新地</strong>：如果想吃得正式一點，可以當大阪重點晚餐。</li>
             </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="food-candidates">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Food candidates</div>
+            <h2>餐廳候選清單範例</h2>
+          </div>
+          <p class="section-sub">先把值得找的類型定下來，之後若你要，我可以再補成具體店名與 Google Maps。</p>
+        </div>
+        <div class="resource-grid">
+          <article class="resource-card">
+            <div class="head"><h3>名古屋</h3><span class="tag">Day 1 / Day 2 主力</span></div>
+            <div class="candidate-list">
+              <div class="candidate-item"><strong>候選 A：手羽先老店</strong>適合 Day 1 晚上，不用想太多，輕鬆開場就夠。</div>
+              <div class="candidate-item"><strong>候選 B：鰻魚飯三吃名店</strong>適合 Day 2 中午，這會是名古屋最有記憶點的一餐。</div>
+              <div class="candidate-item"><strong>候選 C：味噌炸豬排</strong>如果不想排太久，這是很穩的替代方案。</div>
+            </div>
+          </article>
+          <article class="resource-card">
+            <div class="head"><h3>高山 / 富山 / 金澤</h3><span class="tag green">北陸段主菜單</span></div>
+            <div class="candidate-list">
+              <div class="candidate-item"><strong>高山：</strong>飛驒牛燒肉或握壽司，至少挑一種吃到。</div>
+              <div class="candidate-item"><strong>富山：</strong>白蝦丼或富山黑拉麵，這天不用吃太多，抓一個代表性就好。</div>
+              <div class="candidate-item"><strong>金澤：</strong>近江町市場海鮮當白天主餐，晚上再補加賀料理或關東煮。</div>
+            </div>
+          </article>
+          <article class="resource-card">
+            <div class="head"><h3>大阪</h3><span class="tag orange">收尾舒服最重要</span></div>
+            <div class="candidate-list">
+              <div class="candidate-item"><strong>候選 A：KITTE 大阪內餐廳</strong>適合 Day 8，很順手也不會太折騰。</div>
+              <div class="candidate-item"><strong>候選 B：福島區晚餐</strong>適合 Day 9，氛圍和選擇都不錯。</div>
+              <div class="candidate-item"><strong>候選 C：北新地較正式晚餐</strong>如果想把大阪收得更有儀式感，可以選這個方向。</div>
+            </div>
           </article>
         </div>
       </section>
