@@ -570,6 +570,51 @@
         margin-top: 12px;
       }
 
+      .map-stack {
+        display: grid;
+        gap: 12px;
+        margin-top: 14px;
+      }
+
+      .map-entry {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.7);
+        border: 1px solid var(--line);
+      }
+
+      .map-entry-main {
+        min-width: 0;
+      }
+
+      .map-entry-title {
+        font-size: 14px;
+        font-weight: 800;
+        color: var(--text);
+        line-height: 1.5;
+      }
+
+      .map-entry-sub {
+        margin-top: 4px;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .map-go {
+        flex: 0 0 auto;
+        padding: 10px 12px;
+        border-radius: 999px;
+        background: rgba(37, 92, 122, 0.1);
+        color: var(--strong);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
 
       .hero-card, .glass, .stay-card, .highlight, .resource-card, .info-card, .sidebar-card {
         transition: transform .28s ease, box-shadow .28s ease, background .28s ease;
@@ -1063,16 +1108,34 @@
           </article>
 
           <article class="resource-card">
-            <div class="head"><h3>地圖與動線</h3><span class="tag green">之後可加 maps</span></div>
+            <div class="head"><h3>地圖與動線</h3><span class="tag green">Google Maps 可直接打開</span></div>
             <ul>
-              <li>每個城市之後都可以補一組 Google Maps 清單。</li>
-              <li>最適合先做的是：名古屋、大阪兩個城市散步地圖。</li>
-              <li>北陸段則適合做成「交通點 + 景點點」混合地圖。</li>
+              <li>名古屋與大阪先做成散步型城市地圖，方便當天邊走邊看。</li>
+              <li>金澤地圖偏古典景點串接，補足城市感與步行節奏。</li>
+              <li>北陸移動段之後若要再強化，可再加一版「交通點 + 景點點」混合地圖。</li>
             </ul>
-            <div class="links">
-              <span class="link-chip">名古屋地圖（待補）</span>
-              <span class="link-chip">金澤地圖（待補）</span>
-              <span class="link-chip">大阪地圖（待補）</span>
+            <div class="map-stack">
+              <a class="map-entry" href="https://www.google.com/maps/dir/Nagoya+Station/Nagoya+Castle/Atsuta+Jingu/Osu+Kannon/Oasis+21/" target="_blank" rel="noreferrer">
+                <div class="map-entry-main">
+                  <div class="map-entry-title">名古屋散步地圖</div>
+                  <div class="map-entry-sub">名古屋站 → 名古屋城 → 熱田神宮 → 大須觀音 → Oasis 21</div>
+                </div>
+                <span class="map-go">打開地圖 ↗</span>
+              </a>
+              <a class="map-entry" href="https://www.google.com/maps/dir/Kanazawa+Station/Omicho+Market/Kenroku-en/Higashi+Chaya+District/Nagamachi+Samurai+District/21st+Century+Museum+of+Contemporary+Art,+Kanazawa/" target="_blank" rel="noreferrer">
+                <div class="map-entry-main">
+                  <div class="map-entry-title">金澤城市地圖</div>
+                  <div class="map-entry-sub">金澤站 → 近江町市場 → 兼六園 → 東茶屋街 → 長町武家屋敷 → 21 世紀美術館</div>
+                </div>
+                <span class="map-go">打開地圖 ↗</span>
+              </a>
+              <a class="map-entry" href="https://www.google.com/maps/dir/Osaka+Station/Grand+Green+Osaka/KITTE+Osaka/Nakanoshima+Museum+of+Art,+Osaka/Umeda+Sky+Building/" target="_blank" rel="noreferrer">
+                <div class="map-entry-main">
+                  <div class="map-entry-title">大阪散步地圖</div>
+                  <div class="map-entry-sub">大阪站 / 梅田 → GRAND GREEN OSAKA → KITTE 大阪 → 中之島美術館 → 梅田空中庭園</div>
+                </div>
+                <span class="map-go">打開地圖 ↗</span>
+              </a>
             </div>
           </article>
         </div>
