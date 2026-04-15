@@ -953,6 +953,7 @@
           <button class="mode-btn" id="toggleEditBtn" type="button">進入編輯模式</button>
           <button class="mode-btn" id="saveDraftBtn" type="button">儲存草稿</button>
           <button class="mode-btn" id="downloadDraftBtn" type="button">下載草稿</button>
+          <button class="mode-btn" id="publishBtn" type="button">發布到網站</button>
           <span class="editor-status" id="editorStatus">目前是閱讀模式</span>
         </div>
       </nav>
@@ -1495,6 +1496,7 @@
 
     <script>
       const EDIT_STORAGE_KEY = 'travel-koxuan-inline-draft';
+      const PUBLISH_ENDPOINT = 'https://bot.koxuan.com/travel-publish';
       let tripData = null;
       let editMode = false;
 
@@ -1660,6 +1662,43 @@
         setEditorStatus('已下載草稿 JSON');
       }
 
+      async function publishTrip() {
+        if (!tripData) {
+          setEditorStatus('資料尚未載入完成');
+          return;
+        }
+
+        const password = window.prompt('請輸入發布密碼');
+        if (!password) {
+          setEditorStatus('已取消發布');
+          return;
+        }
+
+        setEditorStatus('發布中，正在送到 VPS…');
+        try {
+          const res = await fetch(PUBLISH_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              password,
+              content: tripData,
+              message: `Publish trip update from web editor (${new Date().toLocaleString('zh-TW')})`,
+            }),
+          });
+
+          const result = await res.json().catch(() => ({}));
+          if (!res.ok || !result.ok) {
+            throw new Error(result.error || 'publish_failed');
+          }
+
+          localStorage.removeItem(EDIT_STORAGE_KEY);
+          setEditorStatus(`發布成功，commit ${result.commitSha?.slice(0, 7) || ''}`.trim());
+        } catch (error) {
+          console.error(error);
+          setEditorStatus(`發布失敗：${error.message || error}`);
+        }
+      }
+
       async function loadTripData() {
         try {
           const localDraft = localStorage.getItem(EDIT_STORAGE_KEY);
@@ -1682,6 +1721,7 @@
       document.getElementById('toggleEditBtn').addEventListener('click', () => setEditMode(!editMode));
       document.getElementById('saveDraftBtn').addEventListener('click', saveDraft);
       document.getElementById('downloadDraftBtn').addEventListener('click', downloadDraft);
+      document.getElementById('publishBtn').addEventListener('click', publishTrip);
 
       loadTripData();
     </script>
