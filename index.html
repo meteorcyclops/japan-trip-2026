@@ -867,6 +867,24 @@
         background: rgba(255,255,255,0.45);
       }
 
+      body.edit-mode [contenteditable="true"] {
+        display: block;
+        width: 100%;
+        min-height: 44px;
+        margin-top: 8px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(206, 119, 92, 0.28);
+        background: rgba(255,255,255,0.88);
+        white-space: pre-wrap;
+        line-height: 1.65;
+      }
+
+      body.edit-mode [contenteditable="true"]:focus {
+        outline: 2px solid rgba(37, 92, 122, 0.22);
+        border-color: rgba(37, 92, 122, 0.32);
+      }
+
       body.edit-mode .day-card,
       body.edit-mode .sidebar-card {
         box-shadow: 0 0 0 2px rgba(206, 119, 92, 0.12), var(--shadow-soft);
@@ -1494,6 +1512,10 @@
       }
 
       function setEditMode(enabled) {
+        if (!tripData) {
+          setEditorStatus('資料尚未載入完成');
+          return;
+        }
         editMode = enabled;
         document.body.classList.toggle('edit-mode', enabled);
         const btn = document.getElementById('toggleEditBtn');
