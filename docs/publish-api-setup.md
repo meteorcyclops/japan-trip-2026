@@ -13,7 +13,8 @@
 
 ## 檔案位置
 
-- API 程式：`publish-api/server.js`
+- API 程式（建議 VPS 用）：`publish-api/server.py`
+- API 程式（Node 版備用）：`publish-api/server.js`
 - 套件設定：`publish-api/package.json`
 - 環境變數範例：`publish-api/.env.example`
 
@@ -48,6 +49,10 @@ ALLOWED_ORIGIN=https://travel.koxuan.com
 
 ### 2. 安裝依賴
 
+Python 版不需要額外安裝套件，只要系統有 `python3` 即可。
+
+如果你要跑 Node 版才需要：
+
 ```bash
 cd /opt/travel-publish-api
 npm install
@@ -59,13 +64,13 @@ npm install
 
 ### 4. 啟動服務
 
-可先用：
+建議直接用 Python 版：
 
 ```bash
-node server.js
+python3 server.py
 ```
 
-正式建議用 systemd / pm2。
+正式建議用 systemd。
 
 ## 建議的 Caddy 反向代理
 
