@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>travel.koxuan.com mobile editor</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f3ee;
+        --card: rgba(255, 255, 255, 0.92);
+        --line: rgba(42, 30, 25, 0.12);
+        --text: #2f241f;
+        --muted: #6b5c55;
+        --accent: #c7744f;
+        --accent-2: #5f7d6d;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      .page {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 20px 16px 80px;
+      }
+      .topbar, .panel, .day-card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        box-shadow: 0 16px 40px rgba(63, 45, 37, 0.08);
+      }
+      .topbar {
+        padding: 18px;
+        margin-bottom: 16px;
+      }
+      h1, h2, h3, p { margin: 0; }
+      .muted { color: var(--muted); }
+      .row { display: flex; gap: 10px; flex-wrap: wrap; }
+      .actions { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
+      button, .file-label {
+        border: 0;
+        border-radius: 12px;
+        padding: 12px 14px;
+        font: inherit;
+        cursor: pointer;
+      }
+      button.primary { background: var(--accent); color: white; }
+      button.secondary, .file-label {
+        background: #efe5dd;
+        color: var(--text);
+      }
+      input[type="file"] { display: none; }
+      .panel {
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+      .section-title {
+        margin-bottom: 12px;
+        font-size: 18px;
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+      input[type="text"], textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px;
+        font: inherit;
+        background: white;
+      }
+      textarea { min-height: 96px; resize: vertical; }
+      .day-list { display: grid; gap: 14px; }
+      .day-card { padding: 16px; }
+      .day-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+      .day-num {
+        width: 34px; height: 34px; border-radius: 999px; display: grid; place-items: center;
+        background: #f1e2d8; color: var(--accent); font-weight: 700;
+      }
+      .grid { display: grid; gap: 12px; }
+      .status { margin-top: 10px; font-size: 13px; color: var(--accent-2); }
+      .hint { margin-top: 8px; font-size: 13px; color: var(--muted); line-height: 1.6; }
+      @media (min-width: 720px) {
+        .grid.two { grid-template-columns: 1fr 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="topbar">
+        <h1>travel.koxuan.com 手機編輯器</h1>
+        <p class="muted" style="margin-top:8px; line-height:1.7;">第一版先支援三塊：每日行程、住宿安排、交通注意。改完可直接下載新的 <code>trip.json</code>。</p>
+        <div class="actions">
+          <button class="primary" id="saveLocalBtn">儲存到這台裝置</button>
+          <button class="secondary" id="downloadBtn">下載 trip.json</button>
+          <label class="file-label" for="importFile">匯入 trip.json</label>
+          <input id="importFile" type="file" accept="application/json" />
+          <button class="secondary" id="resetBtn">重載目前 repo 資料</button>
+        </div>
+        <div class="status" id="status">載入中…</div>
+        <div class="hint">建議流程：手機上開這頁編輯 → 按下載 → 用 GitHub App / Files 上傳覆蓋 <code>data/trip.json</code>。下一版可以再補一鍵寫回 repo。</div>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">住宿安排</h2>
+        <textarea id="staysInput"></textarea>
+        <div class="hint">一行一筆，例如：名古屋 2 晚</div>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">交通注意</h2>
+        <textarea id="transportInput"></textarea>
+        <div class="hint">一行一筆，例如：高山 → 富山建議先劃指定席。</div>
+      </section>
+
+      <section class="day-list" id="dayList"></section>
+    </main>
+
+    <script>
+      const DATA_URL = './data/trip.json';
+      const STORAGE_KEY = 'travel-koxuan-trip-editor';
+      let tripData = null;
+
+      const statusEl = document.getElementById('status');
+      const dayListEl = document.getElementById('dayList');
+      const staysInput = document.getElementById('staysInput');
+      const transportInput = document.getElementById('transportInput');
+
+      function setStatus(message) {
+        statusEl.textContent = message;
+      }
+
+      function linesToArray(text) {
+        return text.split('\n').map(v => v.trim()).filter(Boolean);
+      }
+
+      function renderEditor() {
+        staysInput.value = (tripData.stays?.items || []).join('\n');
+        transportInput.value = (tripData.transportTips?.items || []).join('\n');
+
+        dayListEl.innerHTML = '';
+        tripData.days.forEach((day, index) => {
+          const card = document.createElement('section');
+          card.className = 'day-card';
+          card.innerHTML = `
+            <div class="day-head">
+              <div>
+                <h2>Day ${day.day}｜${day.title}</h2>
+                <p class="muted" style="margin-top:6px;">${day.date}</p>
+              </div>
+              <div class="day-num">${index + 1}</div>
+            </div>
+            <div class="grid two">
+              <div>
+                <label>標題</label>
+                <input type="text" data-field="title" data-index="${index}" value="${escapeHtml(day.title)}" />
+              </div>
+              <div>
+                <label>日期</label>
+                <input type="text" data-field="date" data-index="${index}" value="${escapeHtml(day.date)}" />
+              </div>
+            </div>
+            <div class="grid" style="margin-top:12px;">
+              <div>
+                <label>Tags（一行一個）</label>
+                <textarea data-field="tags" data-index="${index}">${escapeHtml((day.tags || []).join('\n'))}</textarea>
+              </div>
+              <div>
+                <label>白話摘要</label>
+                <textarea data-field="summary" data-index="${index}">${escapeHtml(day.summary || '')}</textarea>
+              </div>
+              <div>
+                <label>細節條列（一行一個）</label>
+                <textarea data-field="details" data-index="${index}">${escapeHtml((day.details || []).join('\n'))}</textarea>
+              </div>
+            </div>
+          `;
+          dayListEl.appendChild(card);
+        });
+
+        dayListEl.querySelectorAll('input, textarea').forEach((el) => {
+          el.addEventListener('input', onDayChange);
+        });
+      }
+
+      function onDayChange(event) {
+        const index = Number(event.target.dataset.index);
+        const field = event.target.dataset.field;
+        const value = event.target.value;
+        if (field === 'tags' || field === 'details') {
+          tripData.days[index][field] = linesToArray(value);
+        } else {
+          tripData.days[index][field] = value;
+        }
+      }
+
+      function bindTopLevelInputs() {
+        staysInput.addEventListener('input', () => {
+          tripData.stays.items = linesToArray(staysInput.value);
+        });
+        transportInput.addEventListener('input', () => {
+          tripData.transportTips.items = linesToArray(transportInput.value);
+        });
+      }
+
+      function downloadJson() {
+        const blob = new Blob([JSON.stringify(tripData, null, 2) + '\n'], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'trip.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        setStatus('已下載 trip.json');
+      }
+
+      function saveLocal() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(tripData));
+        setStatus('已儲存到這台裝置');
+      }
+
+      async function loadRepoData() {
+        const res = await fetch(DATA_URL, { cache: 'no-store' });
+        if (!res.ok) throw new Error('無法載入 trip.json');
+        return await res.json();
+      }
+
+      async function resetToRepo() {
+        tripData = await loadRepoData();
+        renderEditor();
+        setStatus('已重載 repo 目前資料');
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;');
+      }
+
+      document.getElementById('downloadBtn').addEventListener('click', downloadJson);
+      document.getElementById('saveLocalBtn').addEventListener('click', saveLocal);
+      document.getElementById('resetBtn').addEventListener('click', resetToRepo);
+      document.getElementById('importFile').addEventListener('change', async (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        const text = await file.text();
+        tripData = JSON.parse(text);
+        renderEditor();
+        setStatus('已匯入新的 trip.json');
+      });
+
+      (async function init() {
+        try {
+          const local = localStorage.getItem(STORAGE_KEY);
+          if (local) {
+            tripData = JSON.parse(local);
+            setStatus('已載入這台裝置上的暫存資料');
+          } else {
+            tripData = await loadRepoData();
+            setStatus('已載入 repo 目前資料');
+          }
+          bindTopLevelInputs();
+          renderEditor();
+        } catch (error) {
+          console.error(error);
+          setStatus('載入失敗，請重新整理或確認 trip.json');
+        }
+      })();
+    </script>
+  </body>
+</html>
