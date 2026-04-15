@@ -842,6 +842,36 @@
         transform: translateY(-1px);
       }
 
+      .editor-toolbar {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .editor-toolbar .mode-btn {
+        background: rgba(37, 92, 122, 0.08);
+        color: var(--strong);
+        font-weight: 700;
+      }
+
+      .editor-status {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      body.edit-mode [data-editable="true"] {
+        outline: 2px dashed rgba(206, 119, 92, 0.45);
+        outline-offset: 4px;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.45);
+      }
+
+      body.edit-mode .day-card,
+      body.edit-mode .sidebar-card {
+        box-shadow: 0 0 0 2px rgba(206, 119, 92, 0.12), var(--shadow-soft);
+      }
+
       .footer::after {
         content: "";
         position: absolute;
@@ -900,6 +930,12 @@
           <a href="#days">每日行程</a>
           <a href="#resources">住宿 / 餐廳 / 地圖</a>
           <a href="#guide-extra">旅行提醒</a>
+        </div>
+        <div class="editor-toolbar">
+          <button class="mode-btn" id="toggleEditBtn" type="button">進入編輯模式</button>
+          <button class="mode-btn" id="saveDraftBtn" type="button">儲存草稿</button>
+          <button class="mode-btn" id="downloadDraftBtn" type="button">下載草稿</button>
+          <span class="editor-status" id="editorStatus">目前是閱讀模式</span>
         </div>
       </nav>
 
@@ -1435,11 +1471,15 @@
       </section>
 
       <footer class="footer">
-        這是目前的 v4 版，已經把 <strong>桌機層次、住宿建議、餐廳方向與地圖區塊骨架</strong> 補上。下一步如果要繼續往前走，最值得做的就是把這些區塊改成真實名單與 Google Maps 連結，之後再接可編輯化會很順。
+        這是目前的 v4 版，已經把 <strong>桌機層次、住宿建議、餐廳方向與地圖區塊骨架</strong> 補上。現在也已經有第一版前台編輯模式與 JSON 資料層，下一步最值得做的是把更多區塊資料化，並補上權限與直接發布。
       </footer>
     </main>
 
     <script>
+      const EDIT_STORAGE_KEY = 'travel-koxuan-inline-draft';
+      let tripData = null;
+      let editMode = false;
+
       function escapeHtml(value) {
         return String(value)
           .replaceAll('&', '&amp;')
@@ -1448,19 +1488,60 @@
           .replaceAll('"', '&quot;');
       }
 
-      function renderDayCard(day) {
+      function setEditorStatus(message) {
+        const el = document.getElementById('editorStatus');
+        if (el) el.textContent = message;
+      }
+
+      function setEditMode(enabled) {
+        editMode = enabled;
+        document.body.classList.toggle('edit-mode', enabled);
+        const btn = document.getElementById('toggleEditBtn');
+        if (btn) btn.textContent = enabled ? '離開編輯模式' : '進入編輯模式';
+        setEditorStatus(enabled ? '目前是編輯模式，可直接改每日行程 / 住宿 / 交通' : '目前是閱讀模式');
+        renderDynamicSections();
+      }
+
+      function renderDayCard(day, index) {
         const tags = (day.tags || []).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join('');
         const details = (day.details || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('');
+        if (!editMode) {
+          return `
+            <article class="day-card" id="${escapeHtml(day.id)}">
+              <div class="day-top"><div><h3 class="day-title">Day ${day.day}｜${escapeHtml(day.title)}</h3><div class="day-date">${escapeHtml(day.date)}</div></div><div class="day-badge">${day.day}</div></div>
+              <div class="tag-row">${tags}</div>
+              <div class="day-summary">${escapeHtml(day.summary || '')}</div>
+              <div class="day-details">
+                <button class="details-toggle" type="button">展開細節</button>
+                <div class="details-body" hidden>
+                  <ul>${details}</ul>
+                </div>
+              </div>
+            </article>
+          `;
+        }
         return `
           <article class="day-card" id="${escapeHtml(day.id)}">
-            <div class="day-top"><div><h3 class="day-title">Day ${day.day}｜${escapeHtml(day.title)}</h3><div class="day-date">${escapeHtml(day.date)}</div></div><div class="day-badge">${day.day}</div></div>
-            <div class="tag-row">${tags}</div>
-            <div class="day-summary">${escapeHtml(day.summary || '')}</div>
-            <div class="day-details">
-              <button class="details-toggle" type="button">展開細節</button>
-              <div class="details-body" hidden>
-                <ul>${details}</ul>
-              </div>
+            <div class="day-top"><div><h3 class="day-title">Day ${day.day}</h3><div class="day-date">${escapeHtml(day.date)}</div></div><div class="day-badge">${day.day}</div></div>
+            <div class="day-summary" data-editable="true">
+              <label>標題</label>
+              <div contenteditable="true" data-kind="day-title" data-index="${index}">${escapeHtml(day.title)}</div>
+            </div>
+            <div class="day-summary" data-editable="true">
+              <label>日期</label>
+              <div contenteditable="true" data-kind="day-date" data-index="${index}">${escapeHtml(day.date)}</div>
+            </div>
+            <div class="day-summary" data-editable="true">
+              <label>Tags（用逗號分隔）</label>
+              <div contenteditable="true" data-kind="day-tags" data-index="${index}">${escapeHtml((day.tags || []).join(', '))}</div>
+            </div>
+            <div class="day-summary" data-editable="true">
+              <label>白話摘要</label>
+              <div contenteditable="true" data-kind="day-summary" data-index="${index}">${escapeHtml(day.summary || '')}</div>
+            </div>
+            <div class="day-summary" data-editable="true">
+              <label>細節（每行一條）</label>
+              <div contenteditable="true" data-kind="day-details" data-index="${index}">${escapeHtml((day.details || []).join('\n'))}</div>
             </div>
           </article>
         `;
@@ -1487,44 +1568,98 @@
             if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           });
         });
+
+        document.querySelectorAll('[contenteditable="true"]').forEach((node) => {
+          node.addEventListener('input', handleEditableInput);
+        });
+      }
+
+      function handleEditableInput(event) {
+        const kind = event.target.dataset.kind;
+        const index = Number(event.target.dataset.index);
+        const value = event.target.innerText.trim();
+
+        if (kind === 'day-title') tripData.days[index].title = value;
+        if (kind === 'day-date') tripData.days[index].date = value;
+        if (kind === 'day-tags') tripData.days[index].tags = value.split(',').map(v => v.trim()).filter(Boolean);
+        if (kind === 'day-summary') tripData.days[index].summary = value;
+        if (kind === 'day-details') tripData.days[index].details = value.split('\n').map(v => v.trim()).filter(Boolean);
+        if (kind === 'stays') tripData.stays.items = value.split('\n').map(v => v.trim()).filter(Boolean);
+        if (kind === 'transport') tripData.transportTips.items = value.split('\n').map(v => v.trim()).filter(Boolean);
+
+        setEditorStatus('草稿尚未儲存');
+      }
+
+      function renderDynamicSections() {
+        const jumpActions = document.getElementById('jumpActions');
+        const dayList = document.getElementById('dynamicDayList');
+        const stays = document.getElementById('dynamicStays');
+        const transport = document.getElementById('dynamicTransportTips');
+
+        if (jumpActions && Array.isArray(tripData.days)) {
+          jumpActions.innerHTML = tripData.days
+            .filter((day) => [1, 3, 5, 8, 10].includes(day.day))
+            .map((day) => `<button class="jump-btn" data-target="${escapeHtml(day.id)}">Day ${day.day}</button>`)
+            .join('');
+        }
+
+        if (dayList && Array.isArray(tripData.days)) {
+          dayList.innerHTML = tripData.days.map((day, index) => renderDayCard(day, index)).join('');
+        }
+
+        if (stays) {
+          stays.innerHTML = editMode
+            ? `<li data-editable="true"><div contenteditable="true" data-kind="stays">${escapeHtml((tripData.stays?.items || []).join('\n'))}</div></li>`
+            : (tripData.stays?.items || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('');
+        }
+
+        if (transport) {
+          transport.innerHTML = editMode
+            ? `<li data-editable="true"><div contenteditable="true" data-kind="transport">${escapeHtml((tripData.transportTips?.items || []).join('\n'))}</div></li>`
+            : (tripData.transportTips?.items || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('');
+        }
+
+        bindDynamicInteractions();
+      }
+
+      function saveDraft() {
+        localStorage.setItem(EDIT_STORAGE_KEY, JSON.stringify(tripData));
+        setEditorStatus('已儲存草稿到這台裝置');
+      }
+
+      function downloadDraft() {
+        const blob = new Blob([JSON.stringify(tripData, null, 2) + '\n'], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'trip-inline-draft.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        setEditorStatus('已下載草稿 JSON');
       }
 
       async function loadTripData() {
         try {
-          const res = await fetch('./data/trip.json', { cache: 'no-store' });
-          if (!res.ok) return;
-          const data = await res.json();
-
-          const jumpActions = document.getElementById('jumpActions');
-          const dayList = document.getElementById('dynamicDayList');
-          const stays = document.getElementById('dynamicStays');
-          const transport = document.getElementById('dynamicTransportTips');
-
-          if (jumpActions && Array.isArray(data.days)) {
-            jumpActions.innerHTML = data.days
-              .filter((day) => [1, 3, 5, 8, 10].includes(day.day))
-              .map((day) => `<button class="jump-btn" data-target="${escapeHtml(day.id)}">Day ${day.day}</button>`)
-              .join('');
+          const localDraft = localStorage.getItem(EDIT_STORAGE_KEY);
+          if (localDraft) {
+            tripData = JSON.parse(localDraft);
+            setEditorStatus('已載入本機草稿');
+          } else {
+            const res = await fetch('./data/trip.json', { cache: 'no-store' });
+            if (!res.ok) return;
+            tripData = await res.json();
+            setEditorStatus('已載入正式資料');
           }
-
-          if (dayList && Array.isArray(data.days)) {
-            dayList.innerHTML = data.days.map(renderDayCard).join('');
-          }
-
-          if (stays && Array.isArray(data.stays?.items)) {
-            stays.innerHTML = data.stays.items.map((item) => `<li>${escapeHtml(item)}</li>`).join('');
-          }
-
-          if (transport && Array.isArray(data.transportTips?.items)) {
-            transport.innerHTML = data.transportTips.items.map((item) => `<li>${escapeHtml(item)}</li>`).join('');
-          }
-
-          bindDynamicInteractions();
+          renderDynamicSections();
         } catch (error) {
           console.error('failed to load trip data', error);
-          bindDynamicInteractions();
+          setEditorStatus('載入失敗');
         }
       }
+
+      document.getElementById('toggleEditBtn').addEventListener('click', () => setEditMode(!editMode));
+      document.getElementById('saveDraftBtn').addEventListener('click', saveDraft);
+      document.getElementById('downloadDraftBtn').addEventListener('click', downloadDraft);
 
       loadTripData();
     </script>
