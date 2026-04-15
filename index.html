@@ -994,46 +994,12 @@
       </nav>
 
       <section class="hero" id="overview">
-        <article class="hero-card">
-          <div class="eyebrow">Japan Family Trip · May 2026</div>
-          <h1>名古屋進，<br />北陸穿越，<br />大阪回台。</h1>
-          <p class="lead">這是一趟為 3 位成人安排的 10 天旅程。前段在名古屋用城市散策開場，中段以高山、富山、金澤串起北陸段，最後收在大阪梅田與中之島的新地標。整體節奏走舒服、不硬塞，但每天都有明確亮點，而且保留足夠的休息與逛街彈性。</p>
-
-          <div class="hero-meta">
-            <div class="mini-card"><div class="mini-label">旅遊日期</div><div class="mini-value">2026/05/21 - 05/30</div></div>
-            <div class="mini-card"><div class="mini-label">成員</div><div class="mini-value">3 位成人</div></div>
-            <div class="mini-card"><div class="mini-label">去程</div><div class="mini-value">CX530<br />TPE 11:35 → NGO 15:35</div></div>
-            <div class="mini-card"><div class="mini-label">回程</div><div class="mini-value">CX565<br />KIX 16:20 → TPE 18:30</div></div>
-          </div>
-        </article>
-
-        <aside class="hero-side">
-          <section class="glass">
-            <div class="section-kicker">Pass</div>
-            <h2 style="margin:6px 0 12px;font-size:24px;">票券重點</h2>
-            <p style="margin:0;color:var(--muted);line-height:1.8;">使用 <strong>高山、北陸地區周遊券</strong> 5 日，日期為 <strong>5/23 - 5/27</strong>。高山 → 富山，以及金澤 → 敦賀 → 大阪這幾段，建議提早劃指定席。</p>
-          </section>
-
-          <section class="glass">
-            <div class="section-kicker">Tone</div>
-            <h2 style="margin:6px 0 12px;font-size:24px;">這趟旅行的調性</h2>
-            <div class="tag-row" style="margin-top:0;">
-              <span class="tag">成人旅行</span>
-              <span class="tag green">建築 / 美術館</span>
-              <span class="tag orange">城市散步</span>
-            </div>
-            <p style="margin:12px 0 0;color:var(--muted);line-height:1.8;">排除白川鄉、合掌村、黑部立山與偏親子景點。大阪則刻意避開重複踩點，改看 2024 年後的新設施。</p>
-          </section>
-        </aside>
+        <article class="hero-card" id="heroCard"></article>
+        <aside class="hero-side" id="heroSide"></aside>
       </section>
 
       <section class="section">
-        <div class="summary-strip">
-          <div class="summary-item"><div class="k">住宿節奏</div><div class="v">2 晚名古屋<br />1 晚高山 / 1 晚富山<br />2 晚金澤 / 3 晚大阪</div></div>
-          <div class="summary-item"><div class="k">移動最重要</div><div class="v">5/23 啟用周遊券<br />5/27 敦賀轉乘到大阪</div></div>
-          <div class="summary-item"><div class="k">這趟亮點</div><div class="v">高山老街、富山玻璃美術館、金澤 21 世紀美術館、GRAND GREEN OSAKA</div></div>
-          <div class="summary-item"><div class="k">旅行氣質</div><div class="v">城市感、建築感、美食密度高，節奏舒服不硬塞</div></div>
-        </div>
+        <div class="summary-strip" id="summaryStrip"></div>
       </section>
 
       <section class="section" id="route-overview">
@@ -1044,32 +1010,7 @@
           </div>
           <p class="section-sub">先用一眼看懂的方式，把整趟移動與票券重點收好。</p>
         </div>
-        <div class="route-board">
-          <article class="route-visual">
-            <h3 style="margin:0 0 12px;font-size:18px;">總路線圖</h3>
-            <div class="route-flow">
-              <div class="route-node"><div class="route-node-badge">1</div><div><strong>名古屋</strong><br /><span style="color:var(--muted);font-size:14px;">5/21 - 5/22，旅程開場</span></div></div>
-              <div class="route-arrow">↓</div>
-              <div class="route-node"><div class="route-node-badge">2</div><div><strong>高山</strong><br /><span style="color:var(--muted);font-size:14px;">5/23，老街與飛驒牛</span></div></div>
-              <div class="route-arrow">↓</div>
-              <div class="route-node"><div class="route-node-badge">3</div><div><strong>富山</strong><br /><span style="color:var(--muted);font-size:14px;">5/24，玻璃美術館與水岸</span></div></div>
-              <div class="route-arrow">↓</div>
-              <div class="route-node"><div class="route-node-badge">4</div><div><strong>金澤</strong><br /><span style="color:var(--muted);font-size:14px;">5/25 - 5/26，古典景點與美術館</span></div></div>
-              <div class="route-arrow">↓</div>
-              <div class="route-node"><div class="route-node-badge">5</div><div><strong>大阪</strong><br /><span style="color:var(--muted);font-size:14px;">5/27 - 5/30，新地標與返程</span></div></div>
-            </div>
-          </article>
-
-          <article class="route-visual">
-            <h3 style="margin:0 0 12px;font-size:18px;">票券 / 指定席提醒表</h3>
-            <div class="ticket-table">
-              <div class="ticket-row"><strong>5/23（六）周遊券 Day 1</strong>名古屋 → 高山，建議先劃 JR Hida 指定席。</div>
-              <div class="ticket-row"><strong>5/24（日）周遊券 Day 2</strong>高山 → 富山，建議提早確認移動班次。</div>
-              <div class="ticket-row"><strong>5/25（一）- 5/26（二）周遊券 Day 3 / 4</strong>富山、金澤市區以散步與短程移動為主，節奏較輕鬆。</div>
-              <div class="ticket-row"><strong>5/27（三）周遊券 Day 5</strong>金澤 → 敦賀 → 大阪，是這趟最重要的轉乘日，指定席建議優先處理。</div>
-            </div>
-          </article>
-        </div>
+        <div class="route-board" id="routeBoard"></div>
       </section>
 
       <section class="section" id="stays">
@@ -1080,35 +1021,7 @@
           </div>
           <p class="section-sub">一邊移動，一邊保留每座城市最值得停下來的時間。</p>
         </div>
-        <div class="stay-grid">
-          <article class="stay-card">
-            <h3>名古屋 · 2 晚</h3>
-            <p>適合作為進日本第一站，先用商圈、城郭、神宮與商店街暖開旅程。</p>
-            <ul>
-              <li>推薦住名古屋站或榮</li>
-              <li>第一天不要排太滿</li>
-              <li>適合先買藥妝與補給</li>
-            </ul>
-          </article>
-          <article class="stay-card">
-            <h3>高山 / 富山 · 各 1 晚</h3>
-            <p>這兩晚讓北陸段不只是路過，而是真正有時間感受高山與富山的城市氣質。</p>
-            <ul>
-              <li>高山看老街與飛驒牛</li>
-              <li>富山主打玻璃美術館與環水公園</li>
-              <li>節奏輕，不要塞太多點</li>
-            </ul>
-          </article>
-          <article class="stay-card">
-            <h3>金澤 / 大阪</h3>
-            <p>金澤留 2 晚給老街、美術館與武家屋敷，大阪留 3 晚收尾，讓購物與返程更從容。</p>
-            <ul>
-              <li>金澤：2 晚剛好</li>
-              <li>大阪：梅田住宿最順</li>
-              <li>最後一天回 KIX 最輕鬆</li>
-            </ul>
-          </article>
-        </div>
+        <div class="stay-grid" id="stayGrid"></div>
       </section>
 
       <section class="section">
@@ -1119,23 +1032,7 @@
           </div>
           <p class="section-sub">避開親子向景點，保留城市感、建築感與美食密度。</p>
         </div>
-        <div class="highlight-grid">
-          <article class="highlight">
-            <div class="icon">🏙️</div>
-            <h3>城市節奏舒服</h3>
-            <p>名古屋與大阪都有完整商圈與夜間散步路線，不需要每天都在趕交通。</p>
-          </article>
-          <article class="highlight">
-            <div class="icon">🎨</div>
-            <h3>北陸偏藝術與美學</h3>
-            <p>富山玻璃美術館、金澤 21 世紀美術館與鈴木大拙館，讓中段旅程有更安靜的質感。</p>
-          </article>
-          <article class="highlight">
-            <div class="icon">✨</div>
-            <h3>大阪看新，不重複舊踩點</h3>
-            <p>用 GRAND GREEN OSAKA、KITTE 大阪與中之島，取代過度熟悉的舊路線。</p>
-          </article>
-        </div>
+        <div class="highlight-grid" id="highlightGrid"></div>
       </section>
 
       <section class="section" id="days">
@@ -1195,75 +1092,7 @@
           </div>
           <p class="section-sub">先把最好用的骨架做好，之後補店名、地圖與連結就會非常快。</p>
         </div>
-        <div class="resource-grid">
-          <article class="resource-card">
-            <div class="head"><h3>住宿建議</h3><span class="tag">住哪裡最順</span></div>
-            <ul>
-              <li><strong>名古屋</strong>：名古屋站或榮，前者交通強，後者夜間散步舒服。</li>
-              <li><strong>高山</strong>：高山站步行圈或溫泉旅館。</li>
-              <li><strong>富山</strong>：富山站周邊最省移動成本。</li>
-              <li><strong>金澤</strong>：金澤站 or 近江町市場周邊。</li>
-              <li><strong>大阪</strong>：梅田優先，最後回 KIX 最順。</li>
-            </ul>
-            <div class="links">
-              <span class="link-chip">名古屋：名古屋站 / 榮</span>
-              <span class="link-chip">高山：高山站步行圈</span>
-              <span class="link-chip">富山：富山站周邊</span>
-              <span class="link-chip">金澤：金澤站 / 近江町市場</span>
-              <span class="link-chip">大阪：梅田</span>
-            </div>
-          </article>
-
-          <article class="resource-card">
-            <div class="head"><h3>餐廳方向</h3><span class="tag orange">先抓方向</span></div>
-            <ul>
-              <li>名古屋：手羽先、味噌炸豬排、鰻魚飯三吃。</li>
-              <li>高山：飛驒牛燒肉、握壽司、酒造試飲。</li>
-              <li>富山：白蝦丼、富山黑拉麵。</li>
-              <li>金澤：近江町海鮮、加賀料理、金澤關東煮。</li>
-              <li>大阪：KITTE、福島區、北新地、堀江咖啡店。</li>
-            </ul>
-            <div class="links">
-              <span class="link-chip">名古屋：鰻魚飯 / 手羽先</span>
-              <span class="link-chip">高山：飛驒牛</span>
-              <span class="link-chip">富山：白蝦 / 黑拉麵</span>
-              <span class="link-chip">金澤：海鮮 / 關東煮</span>
-              <span class="link-chip">大阪：福島 / 北新地</span>
-            </div>
-          </article>
-
-          <article class="resource-card">
-            <div class="head"><h3>景點地圖</h3><span class="tag green">可直接點開 Google Maps</span></div>
-            <ul>
-              <li>名古屋與大阪先做成散步型城市地圖，方便當天邊走邊看。</li>
-              <li>金澤地圖偏古典景點串接，補足城市感與步行節奏。</li>
-              <li>北陸移動段之後若要再強化，可再加一版「交通點 + 景點點」混合地圖。</li>
-            </ul>
-            <div class="map-stack">
-              <a class="map-entry" href="https://www.google.com/maps/dir/Nagoya+Station/Nagoya+Castle/Atsuta+Jingu/Osu+Kannon/Oasis+21/" target="_blank" rel="noreferrer">
-                <div class="map-entry-main">
-                  <div class="map-entry-title">名古屋散步地圖</div>
-                  <div class="map-entry-sub">名古屋站 → 名古屋城 → 熱田神宮 → 大須觀音 → Oasis 21</div>
-                </div>
-                <span class="map-go">打開地圖 ↗</span>
-              </a>
-              <a class="map-entry" href="https://www.google.com/maps/dir/Kanazawa+Station/Omicho+Market/Kenroku-en/Higashi+Chaya+District/Nagamachi+Samurai+District/21st+Century+Museum+of+Contemporary+Art,+Kanazawa/" target="_blank" rel="noreferrer">
-                <div class="map-entry-main">
-                  <div class="map-entry-title">金澤城市地圖</div>
-                  <div class="map-entry-sub">金澤站 → 近江町市場 → 兼六園 → 東茶屋街 → 長町武家屋敷 → 21 世紀美術館</div>
-                </div>
-                <span class="map-go">打開地圖 ↗</span>
-              </a>
-              <a class="map-entry" href="https://www.google.com/maps/dir/Osaka+Station/Grand+Green+Osaka/KITTE+Osaka/Nakanoshima+Museum+of+Art,+Osaka/Umeda+Sky+Building/" target="_blank" rel="noreferrer">
-                <div class="map-entry-main">
-                  <div class="map-entry-title">大阪散步地圖</div>
-                  <div class="map-entry-sub">大阪站 / 梅田 → GRAND GREEN OSAKA → KITTE 大阪 → 中之島美術館 → 梅田空中庭園</div>
-                </div>
-                <span class="map-go">打開地圖 ↗</span>
-              </a>
-            </div>
-          </article>
-        </div>
+        <div class="resource-grid" id="resourceGrid"></div>
       </section>
 
       <section class="section" id="planning-dashboard">
@@ -1274,44 +1103,7 @@
           </div>
           <p class="section-sub">把最容易忘、最值得先處理的事情集中收好。</p>
         </div>
-        <div class="planning-grid">
-          <article class="planning-card special-card">
-            <div class="special-badge">🎴 收藏任務提醒</div>
-            <h3>大阪找 PSA 10 梵谷皮卡丘</h3>
-            <p>最適合安排在 <strong>Day 9 大阪深度漫遊日</strong>，因為這天彈性最大、最不會破壞主要行程。<strong>Day 8</strong> 則適合先順路看卡價，別急著第一家就買。</p>
-            <ul>
-              <li>優先找大阪市區的大型卡店與日本橋一帶。</li>
-              <li>看到價格請先換算，<strong>40 萬円上下算正常帶</strong>。</li>
-              <li>超過 45 萬円先冷靜，除非卡面真的很順眼。</li>
-              <li>最後一天返程日不建議才開始找。</li>
-            </ul>
-          </article>
-
-          <article class="planning-card">
-            <h3>預約 / 待辦優先順序</h3>
-            <div class="todo-list">
-              <div class="todo-item"><div class="todo-dot">1</div><div>確認高山、北陸地區周遊券購買與啟用方式。</div></div>
-              <div class="todo-item"><div class="todo-dot">2</div><div>優先處理 JR Hida、高山 → 富山、金澤 → 敦賀 → 大阪指定席。</div></div>
-              <div class="todo-item"><div class="todo-dot">3</div><div>確認大阪梅田住宿，讓最後三晚與機場日更從容。</div></div>
-              <div class="todo-item"><div class="todo-dot">4</div><div>每個城市至少補 1 間主餐廳 + 1 間備選。</div></div>
-            </div>
-          </article>
-
-          <article class="planning-card">
-            <h3>行李 / 節奏提醒</h3>
-            <ul>
-              <li>北陸段有多次換城市，行李請以好拖、好提為優先。</li>
-              <li>5 月底白天舒服，但早晚與雨天還是建議帶薄外套。</li>
-              <li>這趟主打舒服，不要在移動日臨時塞太多景點。</li>
-              <li>最後一天採買集中梅田，能減少返程焦慮。</li>
-            </ul>
-          </article>
-
-          <article class="planning-card">
-            <h3>最適合分享給朋友的版本</h3>
-            <p>這趟不是打卡式日本，而是偏城市散步、建築感和吃得舒服的版本。前面用名古屋暖開，中段收高山、富山、金澤，最後用大阪新地標做收尾。</p>
-          </article>
-        </div>
+        <div class="planning-grid" id="planningGrid"></div>
       </section>
 
       <section class="section" id="city-visuals">
@@ -1322,28 +1114,7 @@
           </div>
           <p class="section-sub">不用先記細節，先記住每座城市的大致氣氛就夠了。</p>
         </div>
-        <div class="city-visual-grid">
-          <article class="city-visual-card">
-            <div class="city-visual-art city-nagoya"><div class="city-visual-line">名古屋 · 城市開場與商圈節奏</div></div>
-            <h3>名古屋</h3>
-            <p>第一站的任務是把節奏打開，商圈、神宮、城郭和在地美食都很適合暖身。</p>
-          </article>
-          <article class="city-visual-card">
-            <div class="city-visual-art city-takayama"><div class="city-visual-line">高山 · 老街、木造感、飛驒牛</div></div>
-            <h3>高山 / 富山</h3>
-            <p>高山偏老街與木造感，富山則轉成玻璃、現代感與水岸公園，兩城的對比很漂亮。</p>
-          </article>
-          <article class="city-visual-card">
-            <div class="city-visual-art city-kanazawa"><div class="city-visual-line">金澤 · 古典與美術館交錯</div></div>
-            <h3>金澤</h3>
-            <p>兼六園、東茶屋街、武家屋敷與 21 世紀美術館，讓金澤兼具古典與現代氣質。</p>
-          </article>
-          <article class="city-visual-card">
-            <div class="city-visual-art city-osaka"><div class="city-visual-line">大阪 · 新地標、散步、採買收尾</div></div>
-            <h3>大阪</h3>
-            <p>這次不走舊觀光路線，而是把重點放在梅田、中之島與比較新的城市作品感。</p>
-          </article>
-        </div>
+        <div class="city-visual-grid" id="cityVisualGrid"></div>
       </section>
 
       <section class="section" id="stay-shortlist">
@@ -1354,32 +1125,7 @@
           </div>
           <p class="section-sub">先選對區域，比先選華麗飯店更重要，尤其這趟有多次移動。</p>
         </div>
-        <div class="resource-grid">
-          <article class="resource-card">
-            <div class="head"><h3>名古屋</h3><span class="tag">前兩晚最重要</span></div>
-            <ul>
-              <li>優先選 <strong>名古屋站</strong>，對初到日本最友善。</li>
-              <li>如果重視晚上散步與吃飯氣氛，也可以考慮 <strong>榮</strong>。</li>
-              <li>第一天不建議住太複雜難找的地點。</li>
-            </ul>
-          </article>
-          <article class="resource-card">
-            <div class="head"><h3>高山 / 富山 / 金澤</h3><span class="tag green">移動便利優先</span></div>
-            <ul>
-              <li>高山選 <strong>高山站步行圈</strong> 最穩，方便隔天一早移動。</li>
-              <li>富山就住 <strong>富山站周邊</strong>，不要把力氣浪費在拉行李。</li>
-              <li>金澤可選 <strong>金澤站</strong> 或 <strong>近江町市場周邊</strong>，一個偏交通、一個偏旅行感。</li>
-            </ul>
-          </article>
-          <article class="resource-card">
-            <div class="head"><h3>大阪</h3><span class="tag orange">最後三晚最值得住好</span></div>
-            <ul>
-              <li>建議直接鎖定 <strong>梅田</strong>，行程和回 KIX 都最省力。</li>
-              <li>如果長輩同行，越少轉車越好，梅田的整體舒適度會明顯更高。</li>
-              <li>最後一天採買也會更順，不需要再額外跑遠。</li>
-            </ul>
-          </article>
-        </div>
+        <div class="resource-grid" id="stayShortlistGrid"></div>
       </section>
 
       <section class="section" id="stay-candidates">
@@ -1390,30 +1136,7 @@
           </div>
           <p class="section-sub">先用可理解的範例型名單表示，之後如果你決定哪幾間，我可以再幫你換成真實飯店名單。</p>
         </div>
-        <div class="resource-grid">
-          <article class="resource-card">
-            <div class="head"><h3>名古屋</h3><span class="tag">名古屋站 / 榮</span></div>
-            <div class="candidate-list">
-              <div class="candidate-item"><strong>候選 A：名古屋站步行 5 - 8 分鐘的商務飯店</strong>適合第一天拖行李進出，對長輩也最友善。</div>
-              <div class="candidate-item"><strong>候選 B：榮商圈內的較新飯店</strong>晚上吃飯、散步氣氛會更好，但第一天找路會比名古屋站稍微複雜。</div>
-            </div>
-          </article>
-          <article class="resource-card">
-            <div class="head"><h3>高山 / 富山 / 金澤</h3><span class="tag green">移動便利第一</span></div>
-            <div class="candidate-list">
-              <div class="candidate-item"><strong>高山：</strong>高山站步行圈的溫泉旅館或中型飯店，隔天移動最順。</div>
-              <div class="candidate-item"><strong>富山：</strong>富山站前旅館型飯店即可，不用追求太豪華，重點是省移動。</div>
-              <div class="candidate-item"><strong>金澤：</strong>金澤站旁的便利型飯店，或近江町市場周邊較有旅行感的住宿。</div>
-            </div>
-          </article>
-          <article class="resource-card">
-            <div class="head"><h3>大阪</h3><span class="tag orange">梅田優先</span></div>
-            <div class="candidate-list">
-              <div class="candidate-item"><strong>候選 A：大阪站 / 梅田站步行圈飯店</strong>最適合最後三晚與返程日，採買也最輕鬆。</div>
-              <div class="candidate-item"><strong>候選 B：梅田稍外圍但房間較舒適的飯店</strong>如果預算想換成更寬鬆的房型，可以考慮這型。</div>
-            </div>
-          </article>
-        </div>
+        <div class="resource-grid" id="stayCandidatesGrid"></div>
       </section>
 
       <section class="section" id="food-shortlist">
@@ -1424,32 +1147,7 @@
           </div>
           <p class="section-sub">先抓每個城市最值得吃的類型，之後要補成真實店名也很容易。</p>
         </div>
-        <div class="resource-grid">
-          <article class="resource-card">
-            <div class="head"><h3>名古屋</h3><span class="tag">第一波在地感</span></div>
-            <ul>
-              <li><strong>鰻魚飯三吃</strong>：適合排在 Day 2 中午。</li>
-              <li><strong>手羽先</strong>：最適合放 Day 1 晚餐，輕鬆有氣氛。</li>
-              <li><strong>味噌炸豬排</strong>：如果不想排隊太久，是很穩的替代方案。</li>
-            </ul>
-          </article>
-          <article class="resource-card">
-            <div class="head"><h3>高山 / 富山 / 金澤</h3><span class="tag green">北陸段主菜單</span></div>
-            <ul>
-              <li><strong>高山</strong>：飛驒牛燒肉、握壽司、酒造試飲。</li>
-              <li><strong>富山</strong>：白蝦丼、富山黑拉麵，選一個當記憶點就夠。</li>
-              <li><strong>金澤</strong>：近江町市場海鮮、加賀料理、金澤關東煮。</li>
-            </ul>
-          </article>
-          <article class="resource-card">
-            <div class="head"><h3>大阪</h3><span class="tag orange">收尾吃得舒服</span></div>
-            <ul>
-              <li><strong>KITTE 大阪</strong>：適合排在 Day 8，中午或下午都好接。</li>
-              <li><strong>福島區</strong>：適合 Day 9 晚餐，選擇多又有氣氛。</li>
-              <li><strong>北新地</strong>：如果想吃得正式一點，可以當大阪重點晚餐。</li>
-            </ul>
-          </article>
-        </div>
+        <div class="resource-grid" id="foodShortlistGrid"></div>
       </section>
 
       <section class="section" id="food-candidates">
@@ -1460,32 +1158,7 @@
           </div>
           <p class="section-sub">先把值得找的類型定下來，之後若你要，我可以再補成具體店名與 Google Maps。</p>
         </div>
-        <div class="resource-grid">
-          <article class="resource-card">
-            <div class="head"><h3>名古屋</h3><span class="tag">Day 1 / Day 2 主力</span></div>
-            <div class="candidate-list">
-              <div class="candidate-item"><strong>候選 A：手羽先老店</strong>適合 Day 1 晚上，不用想太多，輕鬆開場就夠。</div>
-              <div class="candidate-item"><strong>候選 B：鰻魚飯三吃名店</strong>適合 Day 2 中午，這會是名古屋最有記憶點的一餐。</div>
-              <div class="candidate-item"><strong>候選 C：味噌炸豬排</strong>如果不想排太久，這是很穩的替代方案。</div>
-            </div>
-          </article>
-          <article class="resource-card">
-            <div class="head"><h3>高山 / 富山 / 金澤</h3><span class="tag green">北陸段主菜單</span></div>
-            <div class="candidate-list">
-              <div class="candidate-item"><strong>高山：</strong>飛驒牛燒肉或握壽司，至少挑一種吃到。</div>
-              <div class="candidate-item"><strong>富山：</strong>白蝦丼或富山黑拉麵，這天不用吃太多，抓一個代表性就好。</div>
-              <div class="candidate-item"><strong>金澤：</strong>近江町市場海鮮當白天主餐，晚上再補加賀料理或關東煮。</div>
-            </div>
-          </article>
-          <article class="resource-card">
-            <div class="head"><h3>大阪</h3><span class="tag orange">收尾舒服最重要</span></div>
-            <div class="candidate-list">
-              <div class="candidate-item"><strong>候選 A：KITTE 大阪內餐廳</strong>適合 Day 8，很順手也不會太折騰。</div>
-              <div class="candidate-item"><strong>候選 B：福島區晚餐</strong>適合 Day 9，氛圍和選擇都不錯。</div>
-              <div class="candidate-item"><strong>候選 C：北新地較正式晚餐</strong>如果想把大阪收得更有儀式感，可以選這個方向。</div>
-            </div>
-          </article>
-        </div>
+        <div class="resource-grid" id="foodCandidatesGrid"></div>
       </section>
 
       <section class="section" id="guide-extra">
@@ -1496,37 +1169,10 @@
           </div>
           <p class="section-sub">把最容易臨時手忙腳亂的地方先收好。</p>
         </div>
-        <div class="info-grid">
-          <article class="info-card">
-            <h3>票券與交通</h3>
-            <ul>
-              <li>周遊券啟用日建議就是 5/23，剛好涵蓋到 5/27。</li>
-              <li>長途移動盡量預先指定席，會舒服很多。</li>
-              <li>金澤 → 大阪已不是直達雷鳥，別到時才發現要敦賀轉乘。</li>
-            </ul>
-          </article>
-          <article class="info-card">
-            <h3>穿著與天氣</h3>
-            <ul>
-              <li>5 月底約 15°C - 25°C，白天舒服，早晚微涼。</li>
-              <li>建議薄長袖、好走的鞋、可穿脫外套。</li>
-              <li>城市散步比例高，鞋子比造型重要。</li>
-            </ul>
-          </article>
-          <article class="info-card">
-            <h3>旅行節奏</h3>
-            <ul>
-              <li>這份行程是可以享受的，不是拼命清單。</li>
-              <li>名古屋與大阪可把商圈當彈性緩衝區。</li>
-              <li>若臨時想放慢，優先刪掉備選景點，不要犧牲吃飯與休息。</li>
-            </ul>
-          </article>
-        </div>
+        <div class="info-grid" id="guideExtraGrid"></div>
       </section>
 
-      <footer class="footer">
-        這是目前的 v4 版，已經把 <strong>桌機層次、住宿建議、餐廳方向與地圖區塊骨架</strong> 補上。現在也已經有第一版前台編輯模式與 JSON 資料層，下一步最值得做的是把更多區塊資料化，並補上權限與直接發布。
-      </footer>
+      <footer class="footer" id="dynamicFooter"></footer>
     </main>
 
     <script>
@@ -1559,6 +1205,192 @@
         if (btn) btn.textContent = enabled ? '離開編輯模式' : '進入編輯模式';
         setEditorStatus(enabled ? '目前是編輯模式，可直接改每日行程 / 住宿 / 交通' : '目前是閱讀模式');
         renderDynamicSections();
+      }
+
+      function renderHero() {
+        const hero = tripData.hero || {};
+        const heroCard = document.getElementById('heroCard');
+        const heroSide = document.getElementById('heroSide');
+        if (!heroCard || !heroSide) return;
+
+        heroCard.innerHTML = `
+          <div class="eyebrow">${escapeHtml(hero.eyebrow || '')}</div>
+          <h1>${(hero.headline || []).map((line) => `${escapeHtml(line)}<br />`).join('')}</h1>
+          <p class="lead">${escapeHtml(hero.lead || '')}</p>
+          <div class="hero-meta">
+            ${(hero.metaCards || []).map((card) => `<div class="mini-card"><div class="mini-label">${escapeHtml(card.label || '')}</div><div class="mini-value">${escapeHtml(card.value || '').replaceAll('\n', '<br />')}</div></div>`).join('')}
+          </div>
+        `;
+
+        heroSide.innerHTML = (hero.sideCards || []).map((card) => `
+          <section class="glass">
+            <div class="section-kicker">${escapeHtml(card.kicker || '')}</div>
+            <h2 style="margin:6px 0 12px;font-size:24px;">${escapeHtml(card.title || '')}</h2>
+            ${card.tags ? `<div class="tag-row" style="margin-top:0;">${card.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
+            <p style="margin:12px 0 0;color:var(--muted);line-height:1.8;">${escapeHtml(card.body || '')}</p>
+          </section>
+        `).join('');
+      }
+
+      function renderSummary() {
+        const el = document.getElementById('summaryStrip');
+        if (!el) return;
+        el.innerHTML = (tripData.summary || []).map((item) => `<div class="summary-item"><div class="k">${escapeHtml(item.label || '')}</div><div class="v">${escapeHtml(item.value || '').replaceAll('\n', '<br />')}</div></div>`).join('');
+      }
+
+      function renderRouteOverview() {
+        const el = document.getElementById('routeBoard');
+        if (!el) return;
+        const nodes = tripData.routeOverview?.routeNodes || [];
+        const rows = tripData.routeOverview?.ticketRows || [];
+        el.innerHTML = `
+          <article class="route-visual">
+            <h3 style="margin:0 0 12px;font-size:18px;">總路線圖</h3>
+            <div class="route-flow">
+              ${nodes.map((node, index) => `
+                <div class="route-node"><div class="route-node-badge">${escapeHtml(node.badge || '')}</div><div><strong>${escapeHtml(node.title || '')}</strong><br /><span style="color:var(--muted);font-size:14px;">${escapeHtml(node.subtitle || '')}</span></div></div>
+                ${index < nodes.length - 1 ? '<div class="route-arrow">↓</div>' : ''}
+              `).join('')}
+            </div>
+          </article>
+          <article class="route-visual">
+            <h3 style="margin:0 0 12px;font-size:18px;">票券 / 指定席提醒表</h3>
+            <div class="ticket-table">
+              ${rows.map((row) => {
+                const parts = String(row).split('｜');
+                return `<div class="ticket-row"><strong>${escapeHtml(parts[0] || '')}</strong>${escapeHtml(parts[1] || '')}</div>`;
+              }).join('')}
+            </div>
+          </article>
+        `;
+      }
+
+      function renderStayPlan() {
+        const el = document.getElementById('stayGrid');
+        if (!el) return;
+        el.innerHTML = (tripData.stayPlanCards || []).map((card) => `
+          <article class="stay-card">
+            <h3>${escapeHtml(card.title || '')}</h3>
+            <p>${escapeHtml(card.body || '')}</p>
+            <ul>${(card.items || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
+          </article>
+        `).join('');
+      }
+
+      function renderHighlights() {
+        const el = document.getElementById('highlightGrid');
+        if (!el) return;
+        el.innerHTML = (tripData.highlights || []).map((card) => `
+          <article class="highlight">
+            <div class="icon">${escapeHtml(card.icon || '')}</div>
+            <h3>${escapeHtml(card.title || '')}</h3>
+            <p>${escapeHtml(card.body || '')}</p>
+          </article>
+        `).join('');
+      }
+
+      function renderResourceSection(section) {
+        if (!section) return '';
+        const items = (section.items || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('');
+        const chips = (section.chips || []).map((chip) => `<span class="link-chip">${escapeHtml(chip)}</span>`).join('');
+        const maps = (section.entries || []).map((entry) => `
+          <a class="map-entry" href="${escapeHtml(entry.url || '#')}" target="_blank" rel="noreferrer">
+            <div class="map-entry-main">
+              <div class="map-entry-title">${escapeHtml(entry.title || '')}</div>
+              <div class="map-entry-sub">${escapeHtml(entry.subtitle || '')}</div>
+            </div>
+            <span class="map-go">打開地圖 ↗</span>
+          </a>
+        `).join('');
+        return `
+          <article class="resource-card">
+            <div class="head"><h3>${escapeHtml(section.title || '')}</h3><span class="tag">${escapeHtml(section.tag || '')}</span></div>
+            <ul>${items}</ul>
+            ${chips ? `<div class="links">${chips}</div>` : ''}
+            ${maps ? `<div class="map-stack">${maps}</div>` : ''}
+          </article>
+        `;
+      }
+
+      function renderResources() {
+        const el = document.getElementById('resourceGrid');
+        if (!el) return;
+        const resources = tripData.resources || {};
+        el.innerHTML = [resources.stays, resources.foods, resources.maps].map(renderResourceSection).join('');
+      }
+
+      function renderPlanning() {
+        const el = document.getElementById('planningGrid');
+        if (!el) return;
+        const planning = tripData.planningDashboard || {};
+        const special = planning.specialCard ? `
+          <article class="planning-card special-card">
+            <div class="special-badge">${escapeHtml(planning.specialCard.badge || '')}</div>
+            <h3>${escapeHtml(planning.specialCard.title || '')}</h3>
+            <p>${escapeHtml(planning.specialCard.body || '')}</p>
+            <ul>${(planning.specialCard.items || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
+          </article>
+        ` : '';
+        const cards = (planning.cards || []).map((card) => `
+          <article class="planning-card">
+            <h3>${escapeHtml(card.title || '')}</h3>
+            ${card.items ? `<ul>${card.items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}
+            ${card.body ? `<p>${escapeHtml(card.body)}</p>` : ''}
+          </article>
+        `).join('');
+        el.innerHTML = special + cards;
+      }
+
+      function renderCityVisuals() {
+        const el = document.getElementById('cityVisualGrid');
+        if (!el) return;
+        const classes = ['city-nagoya', 'city-takayama', 'city-kanazawa', 'city-osaka'];
+        el.innerHTML = (tripData.cityVisuals || []).map((card, index) => `
+          <article class="city-visual-card">
+            <div class="city-visual-art ${classes[index] || 'city-nagoya'}"><div class="city-visual-line">${escapeHtml(card.line || '')}</div></div>
+            <h3>${escapeHtml(card.title || '')}</h3>
+            <p>${escapeHtml(card.body || '')}</p>
+          </article>
+        `).join('');
+      }
+
+      function renderSimpleCardGrid(targetId, cards) {
+        const el = document.getElementById(targetId);
+        if (!el) return;
+        el.innerHTML = (cards || []).map((card) => `
+          <article class="resource-card">
+            <div class="head"><h3>${escapeHtml(card.title || '')}</h3><span class="tag">${escapeHtml(card.tag || '')}</span></div>
+            ${card.items ? `<ul>${card.items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}
+          </article>
+        `).join('');
+      }
+
+      function renderCandidateGrid(targetId, cards) {
+        const el = document.getElementById(targetId);
+        if (!el) return;
+        el.innerHTML = (cards || []).map((card) => `
+          <article class="resource-card">
+            <div class="head"><h3>${escapeHtml(card.title || '')}</h3><span class="tag">${escapeHtml(card.tag || '')}</span></div>
+            <div class="candidate-list">${(card.items || []).map((item) => `<div class="candidate-item">${escapeHtml(item)}</div>`).join('')}</div>
+          </article>
+        `).join('');
+      }
+
+      function renderGuideExtra() {
+        const el = document.getElementById('guideExtraGrid');
+        if (!el) return;
+        el.innerHTML = (tripData.guideExtra || []).map((card) => `
+          <article class="info-card">
+            <h3>${escapeHtml(card.title || '')}</h3>
+            <ul>${(card.items || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
+          </article>
+        `).join('');
+      }
+
+      function renderFooter() {
+        const el = document.getElementById('dynamicFooter');
+        if (!el) return;
+        el.innerHTML = escapeHtml(tripData.footer || '');
       }
 
       function renderDayCard(day, index) {
@@ -1654,6 +1486,21 @@
         const dayList = document.getElementById('dynamicDayList');
         const stays = document.getElementById('dynamicStays');
         const transport = document.getElementById('dynamicTransportTips');
+
+        renderHero();
+        renderSummary();
+        renderRouteOverview();
+        renderStayPlan();
+        renderHighlights();
+        renderResources();
+        renderPlanning();
+        renderCityVisuals();
+        renderSimpleCardGrid('stayShortlistGrid', tripData.stayShortlist);
+        renderCandidateGrid('stayCandidatesGrid', tripData.stayCandidates);
+        renderSimpleCardGrid('foodShortlistGrid', tripData.foodShortlist);
+        renderCandidateGrid('foodCandidatesGrid', tripData.foodCandidates);
+        renderGuideExtra();
+        renderFooter();
 
         if (jumpActions && Array.isArray(tripData.days)) {
           jumpActions.innerHTML = tripData.days
