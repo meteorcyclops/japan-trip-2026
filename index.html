@@ -860,6 +860,35 @@
         color: var(--muted);
       }
 
+      .publish-panel {
+        width: 100%;
+        display: none;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+        padding-top: 8px;
+      }
+
+      .publish-panel input {
+        min-width: 220px;
+        flex: 1 1 220px;
+        border: 1px solid rgba(37, 92, 122, 0.18);
+        border-radius: 12px;
+        padding: 10px 12px;
+        font: inherit;
+        background: rgba(255,255,255,0.92);
+      }
+
+      .publish-panel.show {
+        display: flex;
+      }
+
+      .publish-hint {
+        width: 100%;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
       body.edit-mode [data-editable="true"] {
         outline: 2px dashed rgba(206, 119, 92, 0.45);
         outline-offset: 4px;
@@ -955,6 +984,12 @@
           <button class="mode-btn" id="downloadDraftBtn" type="button">下載草稿</button>
           <button class="mode-btn" id="publishBtn" type="button">發布到網站</button>
           <span class="editor-status" id="editorStatus">目前是閱讀模式</span>
+          <div class="publish-panel" id="publishPanel">
+            <input id="publishPassword" type="password" placeholder="輸入發布密碼" autocomplete="current-password" />
+            <button class="mode-btn" id="confirmPublishBtn" type="button">確認發布</button>
+            <button class="mode-btn" id="cancelPublishBtn" type="button">取消</button>
+            <div class="publish-hint">發布會更新 GitHub repo 裡的 <code>data/trip.json</code>，並觸發 GitHub Pages 重新部署。</div>
+          </div>
         </div>
       </nav>
 
@@ -1662,15 +1697,22 @@
         setEditorStatus('已下載草稿 JSON');
       }
 
-      async function publishTrip() {
+      function togglePublishPanel(show) {
+        const panel = document.getElementById('publishPanel');
+        const input = document.getElementById('publishPassword');
+        panel?.classList.toggle('show', show);
+        if (!show && input) input.value = '';
+        if (show && input) input.focus();
+      }
+
+      async function publishTrip(password) {
         if (!tripData) {
           setEditorStatus('資料尚未載入完成');
           return;
         }
 
-        const password = window.prompt('請輸入發布密碼');
         if (!password) {
-          setEditorStatus('已取消發布');
+          setEditorStatus('請先輸入發布密碼');
           return;
         }
 
@@ -1692,6 +1734,7 @@
           }
 
           localStorage.removeItem(EDIT_STORAGE_KEY);
+          togglePublishPanel(false);
           setEditorStatus(`發布成功，commit ${result.commitSha?.slice(0, 7) || ''}`.trim());
         } catch (error) {
           console.error(error);
@@ -1721,7 +1764,15 @@
       document.getElementById('toggleEditBtn').addEventListener('click', () => setEditMode(!editMode));
       document.getElementById('saveDraftBtn').addEventListener('click', saveDraft);
       document.getElementById('downloadDraftBtn').addEventListener('click', downloadDraft);
-      document.getElementById('publishBtn').addEventListener('click', publishTrip);
+      document.getElementById('publishBtn').addEventListener('click', () => togglePublishPanel(true));
+      document.getElementById('cancelPublishBtn').addEventListener('click', () => {
+        togglePublishPanel(false);
+        setEditorStatus('已取消發布');
+      });
+      document.getElementById('confirmPublishBtn').addEventListener('click', () => {
+        const password = document.getElementById('publishPassword').value;
+        publishTrip(password);
+      });
 
       loadTripData();
     </script>
