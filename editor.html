@@ -39,7 +39,6 @@
       }
       h1, h2, h3, p { margin: 0; }
       .muted { color: var(--muted); }
-      .row { display: flex; gap: 10px; flex-wrap: wrap; }
       .actions { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
       button, .file-label {
         border: 0;
@@ -68,7 +67,7 @@
         color: var(--muted);
         margin-bottom: 6px;
       }
-      input[type="text"], textarea {
+      input[type="text"], input[type="password"], textarea {
         width: 100%;
         border: 1px solid var(--line);
         border-radius: 12px;
@@ -85,7 +84,7 @@
         background: #f1e2d8; color: var(--accent); font-weight: 700;
       }
       .grid { display: grid; gap: 12px; }
-      .status { margin-top: 10px; font-size: 13px; color: var(--accent-2); }
+      .status { margin-top: 10px; font-size: 13px; color: var(--accent-2); white-space: pre-wrap; }
       .hint { margin-top: 8px; font-size: 13px; color: var(--muted); line-height: 1.6; }
       .meta-block { margin-top: 14px; display: grid; gap: 10px; }
       .change-list {
@@ -107,9 +106,10 @@
     <main class="page">
       <section class="topbar">
         <h1>travel.koxuan.com 手機編輯器</h1>
-        <p class="muted" style="margin-top:8px; line-height:1.7;">第一版先支援三塊：每日行程、住宿安排、交通注意。改完可直接下載新的 <code>trip.json</code>。</p>
+        <p class="muted" style="margin-top:8px; line-height:1.7;">現在這版已支援修改摘要、changed sections 與正式 publish。每次發布會產生 revision metadata。</p>
         <div class="actions">
-          <button class="primary" id="saveLocalBtn">儲存到這台裝置</button>
+          <button class="primary" id="publishBtn">發布到網站</button>
+          <button class="secondary" id="saveLocalBtn">儲存到這台裝置</button>
           <button class="secondary" id="downloadBtn">下載 trip.json</button>
           <label class="file-label" for="importFile">匯入 trip.json</label>
           <input id="importFile" type="file" accept="application/json" />
@@ -121,12 +121,16 @@
             <input id="publishMessage" type="text" placeholder="例如：調整 Day 4 富山段、更新住宿建議" />
           </div>
           <div>
+            <label for="publishPassword">發布密碼</label>
+            <input id="publishPassword" type="password" placeholder="輸入 travel publish 密碼" />
+          </div>
+          <div>
             <label>目前偵測到的 changed sections</label>
             <div class="change-list" id="changeList">尚未計算</div>
           </div>
         </div>
         <div class="status" id="status">載入中…</div>
-        <div class="hint">現在這版建議每次發佈都填寫修改摘要，系統會記錄 revision、changed sections 與 before / after diff。下一步可以再補完整 history / rollback UI。</div>
+        <div class="hint">發布成功後，系統會同時更新 <code>data/trip.json</code> 與新增 <code>data/versions/&lt;timestamp&gt;.json</code>，記錄 message、changed sections 與 diff。</div>
       </section>
 
       <section class="panel">
@@ -146,6 +150,7 @@
 
     <script>
       const DATA_URL = './data/trip.json';
+      const PUBLISH_ENDPOINT = 'https://bot.koxuan.com/travel-publish';
       const STORAGE_KEY = 'travel-koxuan-trip-editor';
       let tripData = null;
       let repoBaseline = null;
@@ -155,7 +160,9 @@
       const staysInput = document.getElementById('staysInput');
       const transportInput = document.getElementById('transportInput');
       const publishMessageInput = document.getElementById('publishMessage');
+      const publishPasswordInput = document.getElementById('publishPassword');
       const changeListEl = document.getElementById('changeList');
+      const publishBtn = document.getElementById('publishBtn');
 
       function setStatus(message) {
         statusEl.textContent = message;
@@ -293,6 +300,48 @@
         setStatus('已重載 repo 目前資料');
       }
 
+      async function publishTrip() {
+        const message = publishMessageInput.value.trim();
+        const password = publishPasswordInput.value;
+        if (!message) {
+          setStatus('請先填寫這次修改摘要');
+          return;
+        }
+        if (!password) {
+          setStatus('請先輸入發布密碼');
+          return;
+        }
+
+        publishBtn.disabled = true;
+        setStatus('發布中…');
+        try {
+          const res = await fetch(PUBLISH_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              password,
+              message,
+              editor: 'mobile-editor',
+              source: 'editor.html',
+              content: tripData,
+            }),
+          });
+          const result = await res.json();
+          if (!res.ok || !result.ok) {
+            throw new Error(result.detail || result.error || 'publish_failed');
+          }
+          repoBaseline = JSON.parse(JSON.stringify(tripData));
+          refreshChangedSections();
+          setStatus(`發布成功\ncommit: ${result.commitSha || 'unknown'}\nrevision: ${result.revisionPath || 'unknown'}\nchanged: ${(result.changedSections || []).join(', ') || 'none'}`);
+          publishPasswordInput.value = '';
+        } catch (error) {
+          console.error(error);
+          setStatus(`發布失敗：${error.message}`);
+        } finally {
+          publishBtn.disabled = false;
+        }
+      }
+
       function escapeHtml(value) {
         return String(value)
           .replaceAll('&', '&amp;')
@@ -304,6 +353,7 @@
       document.getElementById('downloadBtn').addEventListener('click', downloadJson);
       document.getElementById('saveLocalBtn').addEventListener('click', saveLocal);
       document.getElementById('resetBtn').addEventListener('click', resetToRepo);
+      publishBtn.addEventListener('click', publishTrip);
       document.getElementById('importFile').addEventListener('change', async (event) => {
         const file = event.target.files?.[0];
         if (!file) return;
