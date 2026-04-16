@@ -87,6 +87,17 @@
       .grid { display: grid; gap: 12px; }
       .status { margin-top: 10px; font-size: 13px; color: var(--accent-2); }
       .hint { margin-top: 8px; font-size: 13px; color: var(--muted); line-height: 1.6; }
+      .meta-block { margin-top: 14px; display: grid; gap: 10px; }
+      .change-list {
+        padding: 12px;
+        border-radius: 12px;
+        background: #f6eee7;
+        border: 1px solid var(--line);
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.6;
+        white-space: pre-wrap;
+      }
       @media (min-width: 720px) {
         .grid.two { grid-template-columns: 1fr 1fr; }
       }
@@ -104,8 +115,18 @@
           <input id="importFile" type="file" accept="application/json" />
           <button class="secondary" id="resetBtn">重載目前 repo 資料</button>
         </div>
+        <div class="meta-block">
+          <div>
+            <label for="publishMessage">這次修改摘要</label>
+            <input id="publishMessage" type="text" placeholder="例如：調整 Day 4 富山段、更新住宿建議" />
+          </div>
+          <div>
+            <label>目前偵測到的 changed sections</label>
+            <div class="change-list" id="changeList">尚未計算</div>
+          </div>
+        </div>
         <div class="status" id="status">載入中…</div>
-        <div class="hint">建議流程：手機上開這頁編輯 → 按下載 → 用 GitHub App / Files 上傳覆蓋 <code>data/trip.json</code>。下一版可以再補一鍵寫回 repo。</div>
+        <div class="hint">現在這版建議每次發佈都填寫修改摘要，系統會記錄 revision、changed sections 與 before / after diff。下一步可以再補完整 history / rollback UI。</div>
       </section>
 
       <section class="panel">
@@ -127,11 +148,14 @@
       const DATA_URL = './data/trip.json';
       const STORAGE_KEY = 'travel-koxuan-trip-editor';
       let tripData = null;
+      let repoBaseline = null;
 
       const statusEl = document.getElementById('status');
       const dayListEl = document.getElementById('dayList');
       const staysInput = document.getElementById('staysInput');
       const transportInput = document.getElementById('transportInput');
+      const publishMessageInput = document.getElementById('publishMessage');
+      const changeListEl = document.getElementById('changeList');
 
       function setStatus(message) {
         statusEl.textContent = message;
@@ -141,9 +165,36 @@
         return text.split('\n').map(v => v.trim()).filter(Boolean);
       }
 
+      function collectChangedSections(before, after, path = '') {
+        if (JSON.stringify(before) === JSON.stringify(after)) return [];
+
+        const beforeIsObj = before && typeof before === 'object' && !Array.isArray(before);
+        const afterIsObj = after && typeof after === 'object' && !Array.isArray(after);
+
+        if (!beforeIsObj || !afterIsObj) return [path || 'root'];
+
+        const keys = new Set([...Object.keys(before || {}), ...Object.keys(after || {})]);
+        const changed = [];
+        keys.forEach((key) => {
+          const nextPath = path ? `${path}.${key}` : key;
+          changed.push(...collectChangedSections(before?.[key], after?.[key], nextPath));
+        });
+        return [...new Set(changed)];
+      }
+
+      function refreshChangedSections() {
+        if (!tripData || !repoBaseline) {
+          changeListEl.textContent = '尚未計算';
+          return;
+        }
+        const changed = collectChangedSections(repoBaseline, tripData);
+        changeListEl.textContent = changed.length ? changed.join('\n') : '目前沒有偵測到差異';
+      }
+
       function renderEditor() {
         staysInput.value = (tripData.stays?.items || []).join('\n');
         transportInput.value = (tripData.transportTips?.items || []).join('\n');
+        refreshChangedSections();
 
         dayListEl.innerHTML = '';
         tripData.days.forEach((day, index) => {
@@ -199,14 +250,17 @@
         } else {
           tripData.days[index][field] = value;
         }
+        refreshChangedSections();
       }
 
       function bindTopLevelInputs() {
         staysInput.addEventListener('input', () => {
           tripData.stays.items = linesToArray(staysInput.value);
+          refreshChangedSections();
         });
         transportInput.addEventListener('input', () => {
           tripData.transportTips.items = linesToArray(transportInput.value);
+          refreshChangedSections();
         });
       }
 
@@ -234,6 +288,7 @@
 
       async function resetToRepo() {
         tripData = await loadRepoData();
+        repoBaseline = JSON.parse(JSON.stringify(tripData));
         renderEditor();
         setStatus('已重載 repo 目前資料');
       }
@@ -260,12 +315,14 @@
 
       (async function init() {
         try {
+          const repoData = await loadRepoData();
+          repoBaseline = JSON.parse(JSON.stringify(repoData));
           const local = localStorage.getItem(STORAGE_KEY);
           if (local) {
             tripData = JSON.parse(local);
             setStatus('已載入這台裝置上的暫存資料');
           } else {
-            tripData = await loadRepoData();
+            tripData = repoData;
             setStatus('已載入 repo 目前資料');
           }
           bindTopLevelInputs();
