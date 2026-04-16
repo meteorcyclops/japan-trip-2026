@@ -22,93 +22,46 @@
         color: var(--text);
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
-      .page {
-        max-width: 920px;
-        margin: 0 auto;
-        padding: 20px 16px 80px;
-      }
-      .topbar, .panel, .day-card {
-        background: var(--card);
-        border: 1px solid var(--line);
-        border-radius: 20px;
-        box-shadow: 0 16px 40px rgba(63, 45, 37, 0.08);
-      }
-      .topbar {
-        padding: 18px;
-        margin-bottom: 16px;
-      }
+      .page { max-width: 920px; margin: 0 auto; padding: 20px 16px 80px; }
+      .topbar, .panel, .day-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 16px 40px rgba(63, 45, 37, 0.08); }
+      .topbar { padding: 18px; margin-bottom: 16px; }
       h1, h2, h3, p { margin: 0; }
       .muted { color: var(--muted); }
       .actions { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
-      button, .file-label {
-        border: 0;
-        border-radius: 12px;
-        padding: 12px 14px;
-        font: inherit;
-        cursor: pointer;
-      }
+      button, .file-label { border: 0; border-radius: 12px; padding: 12px 14px; font: inherit; cursor: pointer; }
       button.primary { background: var(--accent); color: white; }
-      button.secondary, .file-label {
-        background: #efe5dd;
-        color: var(--text);
-      }
+      button.secondary, .file-label { background: #efe5dd; color: var(--text); }
+      button.danger { background: #a95545; color: white; }
       input[type="file"] { display: none; }
-      .panel {
-        padding: 16px;
-        margin-bottom: 16px;
-      }
-      .section-title {
-        margin-bottom: 12px;
-        font-size: 18px;
-      }
-      label {
-        display: block;
-        font-size: 13px;
-        color: var(--muted);
-        margin-bottom: 6px;
-      }
-      input[type="text"], input[type="password"], textarea {
-        width: 100%;
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        padding: 12px;
-        font: inherit;
-        background: white;
-      }
+      .panel { padding: 16px; margin-bottom: 16px; }
+      .section-title { margin-bottom: 12px; font-size: 18px; }
+      label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+      input[type="text"], input[type="password"], textarea, select { width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 12px; font: inherit; background: white; }
       textarea { min-height: 96px; resize: vertical; }
       .day-list { display: grid; gap: 14px; }
       .day-card { padding: 16px; }
       .day-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
-      .day-num {
-        width: 34px; height: 34px; border-radius: 999px; display: grid; place-items: center;
-        background: #f1e2d8; color: var(--accent); font-weight: 700;
-      }
+      .day-num { width: 34px; height: 34px; border-radius: 999px; display: grid; place-items: center; background: #f1e2d8; color: var(--accent); font-weight: 700; }
       .grid { display: grid; gap: 12px; }
       .status { margin-top: 10px; font-size: 13px; color: var(--accent-2); white-space: pre-wrap; }
       .hint { margin-top: 8px; font-size: 13px; color: var(--muted); line-height: 1.6; }
       .meta-block { margin-top: 14px; display: grid; gap: 10px; }
-      .change-list {
-        padding: 12px;
-        border-radius: 12px;
-        background: #f6eee7;
-        border: 1px solid var(--line);
-        font-size: 13px;
-        color: var(--muted);
-        line-height: 1.6;
-        white-space: pre-wrap;
-      }
-      @media (min-width: 720px) {
-        .grid.two { grid-template-columns: 1fr 1fr; }
-      }
+      .change-list, .history-list { padding: 12px; border-radius: 12px; background: #f6eee7; border: 1px solid var(--line); font-size: 13px; color: var(--muted); line-height: 1.6; white-space: pre-wrap; }
+      .history-item { padding: 10px 0; border-bottom: 1px solid var(--line); }
+      .history-item:last-child { border-bottom: 0; }
+      .history-meta { font-size: 12px; color: var(--muted); margin-top: 4px; }
+      .history-actions { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; }
+      @media (min-width: 720px) { .grid.two { grid-template-columns: 1fr 1fr; } }
     </style>
   </head>
   <body>
     <main class="page">
       <section class="topbar">
         <h1>travel.koxuan.com 手機編輯器</h1>
-        <p class="muted" style="margin-top:8px; line-height:1.7;">現在這版已支援修改摘要、changed sections 與正式 publish。每次發布會產生 revision metadata。</p>
+        <p class="muted" style="margin-top:8px; line-height:1.7;">現在這版已支援修改摘要、changed sections、revision history 與 rollback。每次發布會產生 revision metadata。</p>
         <div class="actions">
           <button class="primary" id="publishBtn">發布到網站</button>
+          <button class="secondary" id="refreshHistoryBtn">重整版本列表</button>
           <button class="secondary" id="saveLocalBtn">儲存到這台裝置</button>
           <button class="secondary" id="downloadBtn">下載 trip.json</button>
           <label class="file-label" for="importFile">匯入 trip.json</label>
@@ -130,7 +83,12 @@
           </div>
         </div>
         <div class="status" id="status">載入中…</div>
-        <div class="hint">發布成功後，系統會同時更新 <code>data/trip.json</code> 與新增 <code>data/versions/&lt;timestamp&gt;.json</code>，記錄 message、changed sections 與 diff。</div>
+        <div class="hint">發布成功後，系統會同時更新 <code>data/trip.json</code> 與新增 <code>data/versions/&lt;timestamp&gt;.json</code>。你也可以在下方直接看 revision history 並 rollback。</div>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">Revision History</h2>
+        <div class="history-list" id="historyList">載入中…</div>
       </section>
 
       <section class="panel">
@@ -151,9 +109,12 @@
     <script>
       const DATA_URL = './data/trip.json';
       const PUBLISH_ENDPOINT = 'https://bot.koxuan.com/travel-publish';
+      const REVISION_ENDPOINT = 'https://bot.koxuan.com/travel-revisions';
+      const ROLLBACK_ENDPOINT = 'https://bot.koxuan.com/travel-rollback';
       const STORAGE_KEY = 'travel-koxuan-trip-editor';
       let tripData = null;
       let repoBaseline = null;
+      let revisionItems = [];
 
       const statusEl = document.getElementById('status');
       const dayListEl = document.getElementById('dayList');
@@ -163,6 +124,7 @@
       const publishPasswordInput = document.getElementById('publishPassword');
       const changeListEl = document.getElementById('changeList');
       const publishBtn = document.getElementById('publishBtn');
+      const historyListEl = document.getElementById('historyList');
 
       function setStatus(message) {
         statusEl.textContent = message;
@@ -174,12 +136,9 @@
 
       function collectChangedSections(before, after, path = '') {
         if (JSON.stringify(before) === JSON.stringify(after)) return [];
-
         const beforeIsObj = before && typeof before === 'object' && !Array.isArray(before);
         const afterIsObj = after && typeof after === 'object' && !Array.isArray(after);
-
         if (!beforeIsObj || !afterIsObj) return [path || 'root'];
-
         const keys = new Set([...Object.keys(before || {}), ...Object.keys(after || {})]);
         const changed = [];
         keys.forEach((key) => {
@@ -196,6 +155,38 @@
         }
         const changed = collectChangedSections(repoBaseline, tripData);
         changeListEl.textContent = changed.length ? changed.join('\n') : '目前沒有偵測到差異';
+      }
+
+      function renderHistory() {
+        if (!revisionItems.length) {
+          historyListEl.textContent = '目前沒有 revision。';
+          return;
+        }
+        historyListEl.innerHTML = revisionItems.map((item) => `
+          <div class="history-item">
+            <div><strong>${escapeHtml(item.message || item.revisionId || 'Untitled revision')}</strong></div>
+            <div class="history-meta">${escapeHtml(item.createdAt || '')} · ${escapeHtml(item.editor || 'unknown')} · ${escapeHtml((item.changedSections || []).join(', ') || 'no changed sections')}</div>
+            <div class="history-actions">
+              <button class="secondary" data-action="rollback-after" data-revision="${escapeHtml(item.revisionId || '')}">Rollback 到這版</button>
+              <button class="danger" data-action="rollback-before" data-revision="${escapeHtml(item.revisionId || '')}">Rollback 到前一版</button>
+            </div>
+          </div>
+        `).join('');
+        historyListEl.querySelectorAll('button[data-action]').forEach((btn) => {
+          btn.addEventListener('click', () => rollbackRevision(btn.dataset.revision, btn.dataset.action === 'rollback-before' ? 'beforeSnapshot' : 'afterSnapshot'));
+        });
+      }
+
+      async function loadRevisions() {
+        try {
+          const res = await fetch(REVISION_ENDPOINT, { cache: 'no-store' });
+          const data = await res.json();
+          if (!res.ok || !data.ok) throw new Error(data.detail || data.error || 'revision_list_failed');
+          revisionItems = data.items || [];
+          renderHistory();
+        } catch (error) {
+          historyListEl.textContent = `載入 revision history 失敗：${error.message}`;
+        }
       }
 
       function renderEditor() {
@@ -303,35 +294,21 @@
       async function publishTrip() {
         const message = publishMessageInput.value.trim();
         const password = publishPasswordInput.value;
-        if (!message) {
-          setStatus('請先填寫這次修改摘要');
-          return;
-        }
-        if (!password) {
-          setStatus('請先輸入發布密碼');
-          return;
-        }
-
+        if (!message) return setStatus('請先填寫這次修改摘要');
+        if (!password) return setStatus('請先輸入發布密碼');
         publishBtn.disabled = true;
         setStatus('發布中…');
         try {
           const res = await fetch(PUBLISH_ENDPOINT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              password,
-              message,
-              editor: 'mobile-editor',
-              source: 'editor.html',
-              content: tripData,
-            }),
+            body: JSON.stringify({ password, message, editor: 'mobile-editor', source: 'editor.html', content: tripData }),
           });
           const result = await res.json();
-          if (!res.ok || !result.ok) {
-            throw new Error(result.detail || result.error || 'publish_failed');
-          }
+          if (!res.ok || !result.ok) throw new Error(result.detail || result.error || 'publish_failed');
           repoBaseline = JSON.parse(JSON.stringify(tripData));
           refreshChangedSections();
+          await loadRevisions();
           setStatus(`發布成功\ncommit: ${result.commitSha || 'unknown'}\nrevision: ${result.revisionPath || 'unknown'}\nchanged: ${(result.changedSections || []).join(', ') || 'none'}`);
           publishPasswordInput.value = '';
         } catch (error) {
@@ -339,6 +316,30 @@
           setStatus(`發布失敗：${error.message}`);
         } finally {
           publishBtn.disabled = false;
+        }
+      }
+
+      async function rollbackRevision(revisionId, snapshotType) {
+        const password = publishPasswordInput.value;
+        if (!password) return setStatus('Rollback 前請先輸入發布密碼');
+        const message = `Rollback to ${revisionId} (${snapshotType})`;
+        setStatus(`Rollback 中… ${revisionId}`);
+        try {
+          const res = await fetch(ROLLBACK_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password, revisionId, snapshotType, message }),
+          });
+          const result = await res.json();
+          if (!res.ok || !result.ok) throw new Error(result.detail || result.error || 'rollback_failed');
+          tripData = await loadRepoData();
+          repoBaseline = JSON.parse(JSON.stringify(tripData));
+          renderEditor();
+          await loadRevisions();
+          setStatus(`Rollback 成功\ncommit: ${result.commitSha || 'unknown'}\nrevision: ${result.revisionPath || 'unknown'}`);
+        } catch (error) {
+          console.error(error);
+          setStatus(`Rollback 失敗：${error.message}`);
         }
       }
 
@@ -353,6 +354,7 @@
       document.getElementById('downloadBtn').addEventListener('click', downloadJson);
       document.getElementById('saveLocalBtn').addEventListener('click', saveLocal);
       document.getElementById('resetBtn').addEventListener('click', resetToRepo);
+      document.getElementById('refreshHistoryBtn').addEventListener('click', loadRevisions);
       publishBtn.addEventListener('click', publishTrip);
       document.getElementById('importFile').addEventListener('change', async (event) => {
         const file = event.target.files?.[0];
@@ -368,15 +370,11 @@
           const repoData = await loadRepoData();
           repoBaseline = JSON.parse(JSON.stringify(repoData));
           const local = localStorage.getItem(STORAGE_KEY);
-          if (local) {
-            tripData = JSON.parse(local);
-            setStatus('已載入這台裝置上的暫存資料');
-          } else {
-            tripData = repoData;
-            setStatus('已載入 repo 目前資料');
-          }
+          tripData = local ? JSON.parse(local) : repoData;
+          setStatus(local ? '已載入這台裝置上的暫存資料' : '已載入 repo 目前資料');
           bindTopLevelInputs();
           renderEditor();
+          await loadRevisions();
         } catch (error) {
           console.error(error);
           setStatus('載入失敗，請重新整理或確認 trip.json');

@@ -4,6 +4,7 @@ from __future__ import annotations
 import base64
 import json
 import os
+from datetime import datetime
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from time import time
 from urllib.error import HTTPError, URLError
@@ -94,15 +95,73 @@ def build_diff(before, after, path=''):
 
 def github_get_json(url: str):
     req = Request(url, headers=github_headers())
-    with urlopen(req, timeout=20) as resp:
+    with urlopen(req, timeout=30) as resp:
         return json.loads(resp.read().decode())
 
 
 def github_put_json(url: str, payload: dict):
     body = json.dumps(payload, ensure_ascii=False).encode()
     req = Request(url, data=body, headers={**github_headers(), 'Content-Type': 'application/json'}, method='PUT')
-    with urlopen(req, timeout=20) as resp:
+    with urlopen(req, timeout=30) as resp:
         return json.loads(resp.read().decode())
+
+
+def github_content_url(path: str) -> str:
+    return f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents/{path}'
+
+
+def github_fetch_repo_file(path: str):
+    data = github_get_json(f'{github_content_url(path)}?ref={GITHUB_BRANCH}')
+    return data, json.loads(base64.b64decode(data['content']).decode())
+
+
+def now_revision_id() -> str:
+    return datetime.utcnow().replace(microsecond=0).isoformat().replace(':', '-') + 'Z'
+
+
+def create_revision_and_publish(new_content, message, editor, source):
+    current_meta, before_content = github_fetch_repo_file(GITHUB_CONTENT_PATH)
+    normalized_content = normalize_value(new_content)
+    revision_id = now_revision_id()
+    created_at = revision_id.replace('-', ':', 2).replace('-', ':', 1) if False else datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
+    changed_sections = collect_changed_sections(before_content, normalized_content)
+    diff = build_diff(before_content, normalized_content)
+    revision_path = f'{GITHUB_VERSIONS_DIR}/{revision_id}.json'
+    revision_payload = {
+        'revisionId': revision_id,
+        'createdAt': created_at,
+        'editor': editor,
+        'source': source,
+        'message': message,
+        'changedSections': changed_sections,
+        'diff': diff,
+        'beforeSha': current_meta['sha'],
+        'beforeSnapshot': before_content,
+        'afterSnapshot': normalized_content,
+    }
+
+    github_put_json(github_content_url(revision_path), {
+        'message': f'{message} [revision]',
+        'content': base64.b64encode((json.dumps(revision_payload, ensure_ascii=False, indent=2) + '\n').encode()).decode(),
+        'branch': GITHUB_BRANCH,
+    })
+
+    result = github_put_json(github_content_url(GITHUB_CONTENT_PATH), {
+        'message': message,
+        'content': base64.b64encode((json.dumps(normalized_content, ensure_ascii=False, indent=2) + '\n').encode()).decode(),
+        'sha': current_meta['sha'],
+        'branch': GITHUB_BRANCH,
+    })
+
+    return {
+        'ok': True,
+        'commitSha': result.get('commit', {}).get('sha'),
+        'commitUrl': result.get('commit', {}).get('html_url'),
+        'revisionId': revision_id,
+        'revisionPath': revision_path,
+        'revisionUrl': f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/blob/{GITHUB_BRANCH}/{revision_path}',
+        'changedSections': changed_sections,
+    }
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -112,7 +171,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', ALLOWED_ORIGIN)
         self.send_header('Vary', 'Origin')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
-        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.end_headers()
 
     def do_OPTIONS(self):
@@ -123,11 +182,39 @@ class Handler(BaseHTTPRequestHandler):
             self._set_headers(200)
             self.wfile.write(json.dumps({'ok': True, 'service': 'travel-publish-api'}).encode())
             return
+
+        if self.path == '/travel-revisions':
+            try:
+                revisions = github_get_json(f'{github_content_url(GITHUB_VERSIONS_DIR)}?ref={GITHUB_BRANCH}')
+                items = []
+                for entry in revisions if isinstance(revisions, list) else []:
+                    if entry.get('type') != 'file' or not entry.get('name', '').endswith('.json'):
+                        continue
+                    data = github_get_json(entry['download_url']) if entry.get('download_url') else None
+                    if data:
+                        items.append({
+                            'revisionId': data.get('revisionId'),
+                            'createdAt': data.get('createdAt'),
+                            'message': data.get('message'),
+                            'editor': data.get('editor'),
+                            'source': data.get('source'),
+                            'changedSections': data.get('changedSections', []),
+                            'path': entry.get('path'),
+                        })
+                items.sort(key=lambda item: item.get('createdAt', ''), reverse=True)
+                self._set_headers(200)
+                self.wfile.write(json.dumps({'ok': True, 'items': items}).encode())
+                return
+            except Exception as error:
+                self._set_headers(500)
+                self.wfile.write(json.dumps({'ok': False, 'error': 'revision_list_failed', 'detail': str(error)}).encode())
+                return
+
         self._set_headers(404)
         self.wfile.write(json.dumps({'ok': False, 'error': 'not_found'}).encode())
 
     def do_POST(self):
-        if self.path != '/travel-publish':
+        if self.path not in ['/travel-publish', '/travel-rollback']:
             self._set_headers(404)
             self.wfile.write(json.dumps({'ok': False, 'error': 'not_found'}).encode())
             return
@@ -149,77 +236,53 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         password = payload.get('password')
-        content = payload.get('content')
-        message = payload.get('message') or 'Update trip data from web editor'
-        editor = payload.get('editor') or 'web-editor'
-        source = payload.get('source') or 'editor.html'
-
         if not all([PUBLISH_PASSWORD, GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO]):
             self._set_headers(500)
             self.wfile.write(json.dumps({'ok': False, 'error': 'server_not_configured'}).encode())
             return
-
         if password != PUBLISH_PASSWORD:
             self._set_headers(401)
             self.wfile.write(json.dumps({'ok': False, 'error': 'invalid_password'}).encode())
             append_log({'event': 'invalid_password', 'ip': ip})
             return
 
-        if not isinstance(content, dict) or not isinstance(content.get('days'), list) or not isinstance(content.get('stays'), dict) or not isinstance(content.get('transportTips'), dict):
-            self._set_headers(400)
-            self.wfile.write(json.dumps({'ok': False, 'error': 'invalid_content'}).encode())
-            return
-
-        base_url = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents/{GITHUB_CONTENT_PATH}'
         try:
-            current = github_get_json(f'{base_url}?ref={GITHUB_BRANCH}')
-            before_content = json.loads(base64.b64decode(current['content']).decode())
-            normalized_content = normalize_value(content)
-            timestamp = __import__('datetime').datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
-            revision_id = timestamp.replace(':', '-')
-            changed_sections = collect_changed_sections(before_content, normalized_content)
-            diff = build_diff(before_content, normalized_content)
-            revision_path = f'{GITHUB_VERSIONS_DIR}/{revision_id}.json'
-            revision_url = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents/{revision_path}'
-            revision_payload = {
-                'revisionId': revision_id,
-                'createdAt': timestamp,
-                'editor': editor,
-                'source': source,
-                'message': message,
-                'changedSections': changed_sections,
-                'diff': diff,
-                'beforeSha': current['sha'],
-                'beforeSnapshot': before_content,
-                'afterSnapshot': normalized_content,
-            }
+            if self.path == '/travel-publish':
+                content = payload.get('content')
+                message = payload.get('message') or 'Update trip data from web editor'
+                editor = payload.get('editor') or 'web-editor'
+                source = payload.get('source') or 'editor.html'
+                if not isinstance(content, dict) or not isinstance(content.get('days'), list) or not isinstance(content.get('stays'), dict) or not isinstance(content.get('transportTips'), dict):
+                    self._set_headers(400)
+                    self.wfile.write(json.dumps({'ok': False, 'error': 'invalid_content'}).encode())
+                    return
+                response = create_revision_and_publish(content, message, editor, source)
+                append_log({'event': 'publish_ok', 'ip': ip, 'commitSha': response['commitSha'], 'message': message, 'revisionId': response['revisionId']})
+                self._set_headers(200)
+                self.wfile.write(json.dumps(response).encode())
+                return
 
-            github_put_json(revision_url, {
-                'message': f'{message} [revision]',
-                'content': base64.b64encode((json.dumps(revision_payload, ensure_ascii=False, indent=2) + '\n').encode()).decode(),
-                'branch': GITHUB_BRANCH,
-            })
-
-            encoded = base64.b64encode((json.dumps(normalized_content, ensure_ascii=False, indent=2) + '\n').encode()).decode()
-            result = github_put_json(base_url, {
-                'message': message,
-                'content': encoded,
-                'sha': current['sha'],
-                'branch': GITHUB_BRANCH,
-            })
-
-            response = {
-                'ok': True,
-                'commitSha': result.get('commit', {}).get('sha'),
-                'commitUrl': result.get('commit', {}).get('html_url'),
-                'revisionId': revision_id,
-                'revisionPath': revision_path,
-                'revisionUrl': f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/blob/{GITHUB_BRANCH}/{revision_path}',
-                'changedSections': changed_sections,
-            }
-            append_log({'event': 'publish_ok', 'ip': ip, 'commitSha': response['commitSha'], 'message': message, 'revisionId': revision_id})
-            self._set_headers(200)
-            self.wfile.write(json.dumps(response).encode())
+            if self.path == '/travel-rollback':
+                revision_id = payload.get('revisionId')
+                snapshot_type = payload.get('snapshotType', 'afterSnapshot')
+                if snapshot_type not in ['afterSnapshot', 'beforeSnapshot']:
+                    snapshot_type = 'afterSnapshot'
+                if not revision_id:
+                    self._set_headers(400)
+                    self.wfile.write(json.dumps({'ok': False, 'error': 'missing_revision_id'}).encode())
+                    return
+                _, revision = github_fetch_repo_file(f'{GITHUB_VERSIONS_DIR}/{revision_id}.json')
+                content = revision.get(snapshot_type)
+                if not isinstance(content, dict):
+                    self._set_headers(400)
+                    self.wfile.write(json.dumps({'ok': False, 'error': 'invalid_revision_snapshot'}).encode())
+                    return
+                message = payload.get('message') or f'Rollback trip data to {revision_id} ({snapshot_type})'
+                response = create_revision_and_publish(content, message, 'rollback', f'{revision_id}:{snapshot_type}')
+                append_log({'event': 'rollback_ok', 'ip': ip, 'revisionId': revision_id, 'commitSha': response['commitSha']})
+                self._set_headers(200)
+                self.wfile.write(json.dumps(response).encode())
+                return
         except HTTPError as error:
             detail = error.read().decode(errors='replace')
             self._set_headers(502)
